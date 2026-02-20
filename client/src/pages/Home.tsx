@@ -11,6 +11,9 @@ import FanLayout from "@/components/FanLayout";
 import ControlStack from "@/components/ControlStack";
 import MotionPrimitives from "@/components/MotionPrimitives";
 import Storyboard from "@/components/Storyboard";
+import ThrustVectoringSimulator from "@/components/ThrustVectoringSimulator";
+import FlightTimeline from "@/components/FlightTimeline";
+import BillOfMaterials from "@/components/BillOfMaterials";
 
 const HERO_IMG = "https://private-us-east-1.manuscdn.com/sessionFile/6YEWa6XfHa3mfksXDACJN4/sandbox/BF8Qe8UjwgOqOT96SxE286-img-1_1771597400000_na1fn_c2F1Y2VyLWhlcm8.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvNllFV2E2WGZIYTNtZmtzWERBQ0pONC9zYW5kYm94L0JGOFFlOFVqd2dPcU9UOTZTeEUyODYtaW1nLTFfMTc3MTU5NzQwMDAwMF9uYTFmbl9jMkYxWTJWeUxXaGxjbTgucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLHdfMTkyMCxoXzE5MjAvZm9ybWF0LHdlYnAvcXVhbGl0eSxxXzgwIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzk4NzYxNjAwfX19XX0_&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=IxnRXrwQL8z6VRSai-YPL1f8RGISpZF5L5A5DnBz5zbwis6P4n4yh20HDcVPt3F3b0f3KjWngrGLKDxWH07HJ2C8RlQa7PzHXb~c7aej~-vVzz9sGuU2d3OtwYvnkoekmO9TZXnNBEUXsRps6jNhAPJ8qMkDJG8FMtOgr9xHwozzjRkZlW3PKQCEnTNH4ffk~EBuYzjsi7cIArXqLlyjTOfj3xBmnoHQyJv-ZPFWrWSSmMru2nP52w~vGHyrHuI6PhMMvEhbFFE7lrW9VqLN78v3tFRSAqfme9oyjWP1w5AR4~Ip5oll5befoicK9j6MZiXpqw2jnp50o2ltEAqy-Q__";
 const UNDERSIDE_IMG = "https://private-us-east-1.manuscdn.com/sessionFile/6YEWa6XfHa3mfksXDACJN4/sandbox/BF8Qe8UjwgOqOT96SxE286-img-2_1771597409000_na1fn_c2F1Y2VyLXVuZGVyc2lkZQ.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvNllFV2E2WGZIYTNtZmtzWERBQ0pONC9zYW5kYm94L0JGOFFlOFVqd2dPcU9UOTZTeEUyODYtaW1nLTJfMTc3MTU5NzQwOTAwMF9uYTFmbl9jMkYxWTJWeUxYVnVaR1Z5YzJsa1pRLnBuZz94LW9zcy1wcm9jZXNzPWltYWdlL3Jlc2l6ZSx3XzE5MjAsaF8xOTIwL2Zvcm1hdCx3ZWJwL3F1YWxpdHkscV84MCIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc5ODc2MTYwMH19fV19&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=IY~HdLtYjwKCJhN912VmeiQi8RG5Rp1C8OT0zJwaGnHNskxLStqG~j7I2pFzwiWMBQKDZpV11EN2DaP-KBl59rjCttXZLvtsbzmTQK5pOxcoI5Pg1XeOgOJsdMrXCR-KydFMAnmb2aei-hMS~iWjlVDAkVj6RD8EfDyAwTQhjgzD~q9nlCKAZPPMXmg7DsWgUcj4HficEBsCfZuaExrQ5kb8RmbOSaMcD3-3Y4i6hSPMlDtaC-74eR4IeNkASFsXMkaiyx~fnONtk1xGYjJr2amYu6L~ld7TLb~pUZco6wyh9tTStlD1JZHXZRmWfMOm1Z2ZbnysCQhKBFDv0hmDgA__";
@@ -25,6 +28,9 @@ const NAV_SECTIONS = [
   { id: "performance", label: "Performance Calc", icon: "∫" },
   { id: "storyboard", label: "Demo Storyboard", icon: "▶" },
   { id: "physics", label: "Physics Basis", icon: "ψ" },
+  { id: "vectoring", label: "Vectoring Sim", icon: "⊛" },
+  { id: "timeline", label: "Flight Timeline", icon: "⏵" },
+  { id: "bom", label: "Bill of Materials", icon: "⊞" },
 ];
 
 function SectionHeader({ label, title, accent = "cyan" }: { label: string; title: string; accent?: "cyan" | "amber" }) {
@@ -435,7 +441,7 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Bottom classification bar */}
+           {/* Bottom classification bar */}
           <div className="mt-16 flex items-center justify-between py-4" style={{ borderTop: "1px solid oklch(0.18 0.015 240)" }}>
             <div className="label-caps" style={{ color: "oklch(0.30 0.012 240)" }}>
               Project Aurora · Negative Mass Repulsion System · Engineering Reference
@@ -449,6 +455,60 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ── THRUST VECTORING SIMULATOR ── */}
+        <section
+          id="vectoring"
+          ref={el => { sectionRefs.current["vectoring"] = el; }}
+          className="px-8 py-16 max-w-6xl"
+          style={{ borderTop: "1px solid oklch(0.16 0.015 240)" }}
+        >
+          <SectionHeader label="Section 08 · Vectoring Simulator" title="Live Thrust Vectoring Simulator" accent="cyan" />
+          <p className="text-sm leading-relaxed mb-8" style={{ color: "oklch(0.65 0.008 240)", fontFamily: "'Inter'", maxWidth: 640 }}>
+            Drag the lateral joystick to command a direction and watch the 16-fan throttle ring update in real time. The right joystick controls yaw rate. The ring shows per-fan throttle as colour-coded radial bars: cyan for nominal, amber for high, red for burst. A tilt warning fires when the body angle would break the UFO illusion.
+          </p>
+          <ThrustVectoringSimulator />
+        </section>
+
+        {/* ── FLIGHT TIMELINE SCRUBBER ── */}
+        <section
+          id="timeline"
+          ref={el => { sectionRefs.current["timeline"] = el; }}
+          className="px-8 py-16 max-w-6xl"
+          style={{ borderTop: "1px solid oklch(0.16 0.015 240)" }}
+        >
+          <SectionHeader label="Section 09 · Demo Sequence" title="Flight Timeline Scrubber" accent="amber" />
+          <p className="text-sm leading-relaxed mb-8" style={{ color: "oklch(0.65 0.008 240)", fontFamily: "'Inter'", maxWidth: 640 }}>
+            Play through the full 48-second demo sequence automatically or scrub manually. Each of the 8 shots has a distinct motion profile — hover micro-corrections, flat glide, snap-stop deceleration, and the hero exit. Use the speed selector to preview at 0.5×, 1×, 2×, or 4× real time.
+          </p>
+          <FlightTimeline />
+        </section>
+
+        {/* ── BILL OF MATERIALS ── */}
+        <section
+          id="bom"
+          ref={el => { sectionRefs.current["bom"] = el; }}
+          className="px-8 py-16 max-w-6xl"
+          style={{ borderTop: "1px solid oklch(0.16 0.015 240)" }}
+        >
+          <SectionHeader label="Section 10 · Engineering Budget" title="Bill of Materials" accent="amber" />
+          <p className="text-sm leading-relaxed mb-8" style={{ color: "oklch(0.65 0.008 240)", fontFamily: "'Inter'", maxWidth: 640 }}>
+            Full costed bill of materials across six subsystems — propulsion, vectoring, power, structure, control, and sensors — with per-item mass, continuous power draw, and USD cost estimates based on 2025 component pricing. Click a chart segment to filter the table. Click any row to highlight it.
+          </p>
+          <BillOfMaterials />
+
+          {/* Final classification bar */}
+          <div className="mt-16 flex items-center justify-between py-4" style={{ borderTop: "1px solid oklch(0.18 0.015 240)" }}>
+            <div className="label-caps" style={{ color: "oklch(0.30 0.012 240)" }}>
+              Project Aurora · Negative Mass Repulsion System · Engineering Reference v2.0
+            </div>
+            <div className="flex gap-3">
+              <span className="classified-stamp">TOP SECRET</span>
+              <span className="classified-stamp" style={{ color: "oklch(0.75 0.18 200 / 0.7)", borderColor: "oklch(0.75 0.18 200 / 0.4)", transform: "rotate(1deg)" }}>
+                AURORA
+              </span>
+            </div>
+          </div>
+        </section>
       </main>
     </div>
   );
