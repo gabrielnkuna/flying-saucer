@@ -111,7 +111,7 @@ export default function TechnicalBrief() {
                 PROJECT AURORA
               </h1>
               <h2 style={{ fontFamily: "'Rajdhani'", fontSize: 18, fontWeight: 700, color: "oklch(0.75 0.18 200)", letterSpacing: "0.06em" }}>
-                NEGATIVE MASS REPULSION SYSTEM — TECHNICAL BRIEF
+                REPULSION-ILLUSION FLIGHT SYSTEM — TECHNICAL BRIEF
               </h2>
             </div>
             <div className="text-right">
@@ -121,7 +121,7 @@ export default function TechnicalBrief() {
             </div>
           </div>
           <p className="text-sm leading-relaxed" style={{ color: "oklch(0.65 0.008 240)", fontFamily: "'Inter'", maxWidth: 700 }}>
-            A flying saucer-scale craft engineered to produce a convincing negative-mass repulsion illusion through distributed ducted propulsion, segmented thrust vectoring, and a four-layer control architecture — without requiring exotic matter. This brief summarises the design specification, bill of materials, regulatory status, and performance envelope as of Engineering Reference v4.0.
+            A flying saucer-scale craft engineered to produce a convincing repulsion-illusion through distributed ducted lift, segmented thrust vectoring, and a four-layer control architecture — without requiring exotic matter. Implementation: repulsion-illusion via distributed lift + segmented vectoring + control. True negative-mass physics is addressed separately in the R&D Speculation section. This brief summarises the design specification, bill of materials, regulatory status, and performance envelope as of Engineering Reference v8.0.
           </p>
         </div>
 
