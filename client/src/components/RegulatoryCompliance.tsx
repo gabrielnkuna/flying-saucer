@@ -286,11 +286,31 @@ export default function RegulatoryCompliance() {
         })}
       </div>
 
-      {/* Disclaimer */}
+      {/* South Africa Demo Path */}
+      <div className="rounded-sm px-5 py-4" style={{ background: "oklch(0.13 0.020 240)", border: "1px solid oklch(0.75 0.18 200 / 0.25)" }}>
+        <div className="label-caps mb-2" style={{ color: "oklch(0.75 0.18 200)" }}>→ SOUTH AFRICA DEMO PATH (SACAA)</div>
+        <p className="text-xs leading-relaxed mb-3" style={{ color: "oklch(0.65 0.008 240)", fontFamily: "'Inter'" }}>
+          At 800 kg, this craft falls outside the SACAA Part 101 RPA rules (150 kg MTOM cap for commercial operations). The practical path for a South African demonstration flight is:
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {[
+            { step: "1. Experimental Permit", detail: "Apply to SACAA for an Experimental Certificate under CAR Part 24. Requires design documentation, safety case, and test site approval." },
+            { step: "2. Restricted Test Site", detail: "Designate a NOTAM-protected test area (private land, Class G airspace, < 400 ft AGL). SACAA inspector sign-off required before first flight." },
+            { step: "3. Tethered Demo First", detail: "Initial demo flights tethered (< 5 m altitude, < 10 m radius) to validate hover stability before free-flight authorisation. Reduces regulatory risk significantly." },
+          ].map(({ step, detail }) => (
+            <div key={step} className="rounded-sm p-3" style={{ background: "oklch(0.11 0.020 240)", border: "1px solid oklch(0.22 0.015 240)" }}>
+              <div className="label-caps mb-1" style={{ color: "oklch(0.75 0.18 200)", fontSize: 8 }}>{step}</div>
+              <p className="text-xs leading-relaxed" style={{ color: "oklch(0.58 0.008 240)", fontFamily: "'Inter'" }}>{detail}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Jurisdiction note */}
       <div className="rounded-sm px-4 py-3" style={{ background: "oklch(0.13 0.018 240)", border: "1px solid oklch(0.20 0.015 240)" }}>
-        <div className="label-caps mb-1" style={{ color: "oklch(0.40 0.012 240)" }}>LEGAL DISCLAIMER</div>
+        <div className="label-caps mb-1" style={{ color: "oklch(0.40 0.012 240)" }}>JURISDICTION NOTE</div>
         <p className="text-xs leading-relaxed" style={{ color: "oklch(0.40 0.010 240)", fontFamily: "'Inter'" }}>
-          This compliance matrix is a preliminary engineering assessment only and does not constitute legal or regulatory advice. Regulations change frequently. All certification activities must be conducted in direct consultation with the relevant national aviation authority (FAA, EASA, CAA, etc.) and qualified aviation legal counsel. Project Aurora is a design study; no flight operations are implied or authorised by this document.
+          The FAA and EASA items above are reference benchmarks only. Actual requirements depend on country, airspace class, flight test site, whether operations are experimental or commercial, and whether the craft is tethered or free-flying. At this mass class, operations move into experimental/aircraft-grade regulatory territory and require a dedicated safety case, test site permissions, and additional systems depending on jurisdiction. Do not treat any item above as a blanket requirement without consulting the relevant national aviation authority and qualified aviation legal counsel.
         </p>
       </div>
     </div>

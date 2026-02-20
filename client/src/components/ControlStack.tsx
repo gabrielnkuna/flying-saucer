@@ -139,6 +139,27 @@ export default function ControlStack() {
         );
       })}
 
+      {/* Hard Limits card */}
+      <div className="mt-6 rounded-sm p-4" style={{ background: "oklch(0.14 0.020 240)", border: "1px solid oklch(0.65 0.22 25 / 0.35)" }}>
+        <div className="label-caps mb-3" style={{ color: "oklch(0.65 0.22 25)" }}>⚠ Layer 0 — Hard Limits (non-overridable)</div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {[
+            { param: "Max Body Tilt",      value: "12°",       note: "roll or pitch" },
+            { param: "Max Lateral Accel",  value: "0.35 g",    note: "sustained" },
+            { param: "Max Descent Rate",   value: "3 m/s",     note: "controlled" },
+            { param: "Max Motor Temp",     value: "85 °C",     note: "winding" },
+            { param: "Min Bus Voltage",    value: "42 V",      note: "20% SoC cutoff" },
+            { param: "Max Burst Duration", value: "30 s",      note: "at 350 kW" },
+          ].map(({ param, value, note }) => (
+            <div key={param} className="rounded-sm px-3 py-2" style={{ background: "oklch(0.12 0.022 240)", border: "1px solid oklch(0.65 0.22 25 / 0.18)" }}>
+              <div className="label-caps" style={{ fontSize: 8, color: "oklch(0.45 0.015 240)" }}>{param}</div>
+              <div className="data-value text-sm" style={{ color: "oklch(0.65 0.22 25)" }}>{value}</div>
+              <div style={{ fontFamily: "'JetBrains Mono'", fontSize: 9, color: "oklch(0.40 0.015 240)", marginTop: 2 }}>{note}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Data flow arrows hint */}
       <div className="flex items-center gap-2 pt-2">
         <div className="label-caps">Data flow:</div>

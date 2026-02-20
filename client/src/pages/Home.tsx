@@ -34,6 +34,7 @@ import RnDSpeculation from "@/components/RnDSpeculation";
 import ChangelogModal from "@/components/ChangelogModal";
 import ShareModal from "@/components/ShareModal";
 import ConfigComparison from "@/components/ConfigComparison";
+import DemoGates from "@/components/DemoGates";
 
 const HERO_IMG = "https://private-us-east-1.manuscdn.com/sessionFile/6YEWa6XfHa3mfksXDACJN4/sandbox/BF8Qe8UjwgOqOT96SxE286-img-1_1771597400000_na1fn_c2F1Y2VyLWhlcm8.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvNllFV2E2WGZIYTNtZmtzWERBQ0pONC9zYW5kYm94L0JGOFFlOFVqd2dPcU9UOTZTeEUyODYtaW1nLTFfMTc3MTU5NzQwMDAwMF9uYTFmbl9jMkYxWTJWeUxXaGxjbTgucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLHdfMTkyMCxoXzE5MjAvZm9ybWF0LHdlYnAvcXVhbGl0eSxxXzgwIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzk4NzYxNjAwfX19XX0_&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=IxnRXrwQL8z6VRSai-YPL1f8RGISpZF5L5A5DnBz5zbwis6P4n4yh20HDcVPt3F3b0f3KjWngrGLKDxWH07HJ2C8RlQa7PzHXb~c7aej~-vVzz9sGuU2d3OtwYvnkoekmO9TZXnNBEUXsRps6jNhAPJ8qMkDJG8FMtOgr9xHwozzjRkZlW3PKQCEnTNH4ffk~EBuYzjsi7cIArXqLlyjTOfj3xBmnoHQyJv-ZPFWrWSSmMru2nP52w~vGHyrHuI6PhMMvEhbFFE7lrW9VqLN78v3tFRSAqfme9oyjWP1w5AR4~Ip5oll5befoicK9j6MZiXpqw2jnp50o2ltEAqy-Q__";
 const UNDERSIDE_IMG = "https://private-us-east-1.manuscdn.com/sessionFile/6YEWa6XfHa3mfksXDACJN4/sandbox/BF8Qe8UjwgOqOT96SxE286-img-2_1771597409000_na1fn_c2F1Y2VyLXVuZGVyc2lkZQ.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvNllFV2E2WGZIYTNtZmtzWERBQ0pONC9zYW5kYm94L0JGOFFlOFVqd2dPcU9UOTZTeEUyODYtaW1nLTJfMTc3MTU5NzQwOTAwMF9uYTFmbl9jMkYxWTJWeUxYVnVaR1Z5YzJsa1pRLnBuZz94LW9zcy1wcm9jZXNzPWltYWdlL3Jlc2l6ZSx3XzE5MjAsaF8xOTIwL2Zvcm1hdCx3ZWJwL3F1YWxpdHkscV84MCIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc5ODc2MTYwMH19fV19&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=IY~HdLtYjwKCJhN912VmeiQi8RG5Rp1C8OT0zJwaGnHNskxLStqG~j7I2pFzwiWMBQKDZpV11EN2DaP-KBl59rjCttXZLvtsbzmTQK5pOxcoI5Pg1XeOgOJsdMrXCR-KydFMAnmb2aei-hMS~iWjlVDAkVj6RD8EfDyAwTQhjgzD~q9nlCKAZPPMXmg7DsWgUcj4HficEBsCfZuaExrQ5kb8RmbOSaMcD3-3Y4i6hSPMlDtaC-74eR4IeNkASFsXMkaiyx~fnONtk1xGYjJr2amYu6L~ld7TLb~pUZco6wyh9tTStlD1JZHXZRmWfMOm1Z2ZbnysCQhKBFDv0hmDgA__";
@@ -69,6 +70,7 @@ const NAV_SECTIONS = [
   { id: "roadmap", label: "Build Roadmap", icon: "◫" },
   { id: "rnd-speculation", label: "R\u0026D Speculation", icon: "Ψ" },
   { id: "config-comparison", label: "Config Compare", icon: "⇄" },
+  { id: "demo-gates", label: "Demo Gates", icon: "▦" },
 ];
 
 function SectionHeader({ label, title, accent = "cyan" }: { label: string; title: string; accent?: "cyan" | "amber" }) {
@@ -397,7 +399,7 @@ export default function Home() {
                   { label: "Dry Mass", value: "800 kg", note: null, color: "oklch(0.75 0.18 200)" },
                   { label: "Hover Power", value: "220 kW", note: "continuous", color: "oklch(0.75 0.18 200)" },
                   { label: "Burst Power", value: "350 kW", note: "10–30 s max", color: "oklch(0.65 0.22 25)" },
-                  { label: "Battery", value: "55 kWh", note: "≈ 15 min hover", color: "oklch(0.65 0.22 25)" },
+                  { label: "Battery", value: "55 kWh", note: "8–12 min practical hover", color: "oklch(0.65 0.22 25)" },
                   { label: "Fan Modules", value: "16", note: null, color: "oklch(0.75 0.18 200)" },
                   { label: "Vector Segments", value: "32", note: null, color: "oklch(0.75 0.18 200)" },
                   { label: "Max Lateral", value: "0.35 g", note: null, color: "oklch(0.75 0.18 200)" },
@@ -1016,11 +1018,25 @@ export default function Home() {
             Pin a baseline configuration and compare it against a modified design. Adjust diameter, hull material, and battery chemistry independently for each configuration. Delta values show the net change in mass, power, endurance, cost, and regulatory status.
           </p>
           <ConfigComparison />
+        </section>
+
+        {/* ── DEMO GATES ── */}
+        <section
+          id="demo-gates"
+          ref={el => { sectionRefs.current["demo-gates"] = el; }}
+          className="px-8 py-16 max-w-6xl"
+          style={{ borderTop: "1px solid oklch(0.16 0.015 240)" }}
+        >
+          <SectionHeader label="Section 30 · Demo Flight Readiness" title="Demo Gates — Pass/Fail Tracker" accent="amber" />
+          <p className="text-sm leading-relaxed mb-8" style={{ color: "oklch(0.65 0.008 240)", fontFamily: "'Inter'", maxWidth: 640 }}>
+            Four sequential gates from bench hover to the headline repulsion-illusion demonstration. Each gate has quantitative pass criteria, editable metric fields for live run data, and a manual pass/fail toggle. Passing Gate A unlocks Gate B, and so on.
+          </p>
+          <DemoGates />
 
           <div className="mt-16 flex items-center justify-between py-4" style={{ borderTop: "1px solid oklch(0.18 0.015 240)" }}>
             <div className="label-caps" style={{ color: "oklch(0.30 0.012 240)" }}>
               Project Aurora · Repulsion-Illusion Flight System ·{" "}
-              <button onClick={() => setChangelogOpen(true)} className="underline transition-colors" style={{ color: "oklch(0.75 0.18 200 / 0.60)" }}>Engineering Reference v10.0</button>
+              <button onClick={() => setChangelogOpen(true)} className="underline transition-colors" style={{ color: "oklch(0.75 0.18 200 / 0.60)" }}>Engineering Reference v11.0</button>
             </div>
             <div className="flex gap-3">
               <span className="classified-stamp">TOP SECRET</span>

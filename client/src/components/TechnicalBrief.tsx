@@ -19,7 +19,8 @@ const SPECS = [
   { label: "Hover Power", value: "220 kW continuous" },
   { label: "Burst Power", value: "350 kW (< 30 s)" },
   { label: "Battery", value: "55 kWh LiPo/LiFePO₄" },
-  { label: "Hover Endurance", value: "~15 min (hover only)" },
+  { label: "Hover Endurance", value: "8–12 min practical (55 kWh)" },
+  { label: "Endurance Basis", value: "75–85% usable + 15 kW overhead" },
   { label: "Max Lateral Accel", value: "0.35 g (burst)" },
   { label: "Sustained Lateral", value: "0.15 g (flat glide)" },
   { label: "Snap-stop Decel", value: "0.25–0.35 g" },
@@ -255,7 +256,7 @@ export default function TechnicalBrief() {
             <div className="label-caps mb-3" style={{ color: "oklch(0.65 0.22 25)" }}>OPEN RISKS & NEXT STEPS</div>
             <div className="space-y-2">
               {[
-                { risk: "Battery energy density", note: "200 Wh/kg limits endurance to ~15 min hover. Solid-state cells (400+ Wh/kg) would double endurance." },
+                { risk: "Battery energy density", note: "200 Wh/kg + 75–85% usable SoC + ~15 kW avionics overhead limits practical hover to 8–12 min. Solid-state cells (400+ Wh/kg) could extend to 16–22 min." },
                 { risk: "Type certification path", note: "No existing standard covers this configuration. Special Conditions development is a multi-year process." },
                 { risk: "ADS-B / transponder", note: "Must be added to BOM before any controlled airspace operation." },
                 { risk: "Acoustic testing", note: "Plenum damping model is analytical. Physical test required for Part 36 certification." },
