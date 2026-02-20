@@ -14,6 +14,8 @@ import Storyboard from "@/components/Storyboard";
 import ThrustVectoringSimulator from "@/components/ThrustVectoringSimulator";
 import FlightTimeline from "@/components/FlightTimeline";
 import BillOfMaterials from "@/components/BillOfMaterials";
+import FaultToleranceSimulator from "@/components/FaultToleranceSimulator";
+import AcousticAnalyser from "@/components/AcousticAnalyser";
 
 const HERO_IMG = "https://private-us-east-1.manuscdn.com/sessionFile/6YEWa6XfHa3mfksXDACJN4/sandbox/BF8Qe8UjwgOqOT96SxE286-img-1_1771597400000_na1fn_c2F1Y2VyLWhlcm8.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvNllFV2E2WGZIYTNtZmtzWERBQ0pONC9zYW5kYm94L0JGOFFlOFVqd2dPcU9UOTZTeEUyODYtaW1nLTFfMTc3MTU5NzQwMDAwMF9uYTFmbl9jMkYxWTJWeUxXaGxjbTgucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLHdfMTkyMCxoXzE5MjAvZm9ybWF0LHdlYnAvcXVhbGl0eSxxXzgwIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzk4NzYxNjAwfX19XX0_&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=IxnRXrwQL8z6VRSai-YPL1f8RGISpZF5L5A5DnBz5zbwis6P4n4yh20HDcVPt3F3b0f3KjWngrGLKDxWH07HJ2C8RlQa7PzHXb~c7aej~-vVzz9sGuU2d3OtwYvnkoekmO9TZXnNBEUXsRps6jNhAPJ8qMkDJG8FMtOgr9xHwozzjRkZlW3PKQCEnTNH4ffk~EBuYzjsi7cIArXqLlyjTOfj3xBmnoHQyJv-ZPFWrWSSmMru2nP52w~vGHyrHuI6PhMMvEhbFFE7lrW9VqLN78v3tFRSAqfme9oyjWP1w5AR4~Ip5oll5befoicK9j6MZiXpqw2jnp50o2ltEAqy-Q__";
 const UNDERSIDE_IMG = "https://private-us-east-1.manuscdn.com/sessionFile/6YEWa6XfHa3mfksXDACJN4/sandbox/BF8Qe8UjwgOqOT96SxE286-img-2_1771597409000_na1fn_c2F1Y2VyLXVuZGVyc2lkZQ.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvNllFV2E2WGZIYTNtZmtzWERBQ0pONC9zYW5kYm94L0JGOFFlOFVqd2dPcU9UOTZTeEUyODYtaW1nLTJfMTc3MTU5NzQwOTAwMF9uYTFmbl9jMkYxWTJWeUxYVnVaR1Z5YzJsa1pRLnBuZz94LW9zcy1wcm9jZXNzPWltYWdlL3Jlc2l6ZSx3XzE5MjAsaF8xOTIwL2Zvcm1hdCx3ZWJwL3F1YWxpdHkscV84MCIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc5ODc2MTYwMH19fV19&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=IY~HdLtYjwKCJhN912VmeiQi8RG5Rp1C8OT0zJwaGnHNskxLStqG~j7I2pFzwiWMBQKDZpV11EN2DaP-KBl59rjCttXZLvtsbzmTQK5pOxcoI5Pg1XeOgOJsdMrXCR-KydFMAnmb2aei-hMS~iWjlVDAkVj6RD8EfDyAwTQhjgzD~q9nlCKAZPPMXmg7DsWgUcj4HficEBsCfZuaExrQ5kb8RmbOSaMcD3-3Y4i6hSPMlDtaC-74eR4IeNkASFsXMkaiyx~fnONtk1xGYjJr2amYu6L~ld7TLb~pUZco6wyh9tTStlD1JZHXZRmWfMOm1Z2ZbnysCQhKBFDv0hmDgA__";
@@ -31,6 +33,8 @@ const NAV_SECTIONS = [
   { id: "vectoring", label: "Vectoring Sim", icon: "⊛" },
   { id: "timeline", label: "Flight Timeline", icon: "⏵" },
   { id: "bom", label: "Bill of Materials", icon: "⊞" },
+  { id: "fault", label: "Fault Tolerance", icon: "⚠" },
+  { id: "acoustic", label: "Acoustic Analyser", icon: "∿" },
 ];
 
 function SectionHeader({ label, title, accent = "cyan" }: { label: string; title: string; accent?: "cyan" | "amber" }) {
@@ -500,6 +504,47 @@ export default function Home() {
           <div className="mt-16 flex items-center justify-between py-4" style={{ borderTop: "1px solid oklch(0.18 0.015 240)" }}>
             <div className="label-caps" style={{ color: "oklch(0.30 0.012 240)" }}>
               Project Aurora · Negative Mass Repulsion System · Engineering Reference v2.0
+            </div>
+            <div className="flex gap-3">
+              <span className="classified-stamp">TOP SECRET</span>
+              <span className="classified-stamp" style={{ color: "oklch(0.75 0.18 200 / 0.7)", borderColor: "oklch(0.75 0.18 200 / 0.4)", transform: "rotate(1deg)" }}>
+                AURORA
+              </span>
+            </div>
+          </div>
+        </section>
+
+        {/* ── FAULT TOLERANCE SIMULATOR ── */}
+        <section
+          id="fault"
+          ref={el => { sectionRefs.current["fault"] = el; }}
+          className="px-8 py-16 max-w-6xl"
+          style={{ borderTop: "1px solid oklch(0.16 0.015 240)" }}
+        >
+          <SectionHeader label="Section 11 · Reliability" title="Fault-Tolerance Simulator" accent="cyan" />
+          <p className="text-sm leading-relaxed mb-8" style={{ color: "oklch(0.65 0.008 240)", fontFamily: "'Inter'", maxWidth: 640 }}>
+            Click any fan module to simulate a failure. The control stack instantly recalculates asymmetric compensation throttles for surviving fans and reports residual roll/pitch torque, thrust margin, and whether attitude hold remains achievable. Use the quick scenario buttons to test zone failures and catastrophic configurations.
+          </p>
+          <FaultToleranceSimulator />
+        </section>
+
+        {/* ── ACOUSTIC ANALYSER ── */}
+        <section
+          id="acoustic"
+          ref={el => { sectionRefs.current["acoustic"] = el; }}
+          className="px-8 py-16 max-w-6xl"
+          style={{ borderTop: "1px solid oklch(0.16 0.015 240)" }}
+        >
+          <SectionHeader label="Section 12 · Acoustic Signature" title="Noise Signature Analyser" accent="amber" />
+          <p className="text-sm leading-relaxed mb-8" style={{ color: "oklch(0.65 0.008 240)", fontFamily: "'Inter'", maxWidth: 640 }}>
+            Frequency-domain model of the annular array’s acoustic output at any throttle level. Toggle between the undamped bare-array spectrum and the plenum-damped spectrum to see how the resonant chambers and annular slit suppress the blade-pass frequency tonal and its harmonics, making the propulsion signature harder to identify.
+          </p>
+          <AcousticAnalyser />
+
+          {/* Final classification bar v3 */}
+          <div className="mt-16 flex items-center justify-between py-4" style={{ borderTop: "1px solid oklch(0.18 0.015 240)" }}>
+            <div className="label-caps" style={{ color: "oklch(0.30 0.012 240)" }}>
+              Project Aurora · Negative Mass Repulsion System · Engineering Reference v3.0
             </div>
             <div className="flex gap-3">
               <span className="classified-stamp">TOP SECRET</span>

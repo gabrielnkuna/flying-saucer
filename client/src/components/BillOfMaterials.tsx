@@ -97,6 +97,25 @@ const CustomTooltip = ({ active, payload }: any) => {
   );
 };
 
+function exportCSV(items: BOMItem[]) {
+  const headers = ["ID", "Subsystem", "Component", "Qty", "Unit Mass (kg)", "Total Mass (kg)", "Unit Power (W)", "Total Power (W)", "Unit Cost (USD)", "Total Cost (USD)", "Notes"];
+  const rows = items.map(i => [
+    i.id, i.subsystem, `"${i.component}"`, i.qty,
+    i.unitMass, (i.qty * i.unitMass).toFixed(2),
+    i.unitPower, (i.qty * i.unitPower).toFixed(0),
+    i.unitCost, (i.qty * i.unitCost).toFixed(0),
+    `"${i.notes}"`
+  ].join(","));
+  const csv = [headers.join(","), ...rows].join("\n");
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "project-aurora-bom.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 export default function BillOfMaterials() {
   const [activeTab, setActiveTab] = useState<BudgetTab>("cost");
   const [filterCat, setFilterCat] = useState<string | null>(null);
@@ -219,11 +238,20 @@ export default function BillOfMaterials() {
             Bill of Materials
             {filterCat && <span style={{ color: CATEGORY_COLORS[filterCat], marginLeft: 8 }}>· {filterCat.toUpperCase()}</span>}
           </div>
-          {filterCat && (
-            <button onClick={() => setFilterCat(null)} className="label-caps" style={{ color: "oklch(0.65 0.22 25)" }}>
-              CLEAR FILTER ×
+          <div className="flex items-center gap-3">
+            {filterCat && (
+              <button onClick={() => setFilterCat(null)} className="label-caps" style={{ color: "oklch(0.65 0.22 25)" }}>
+                CLEAR FILTER ×
+              </button>
+            )}
+            <button
+              onClick={() => exportCSV(filteredBOM)}
+              className="label-caps px-3 py-1 rounded-sm transition-all"
+              style={{ border: "1px solid oklch(0.65 0.18 145 / 0.4)", color: "oklch(0.65 0.18 145)", background: "oklch(0.65 0.18 145 / 0.06)" }}
+            >
+              ↓ EXPORT CSV
             </button>
-          )}
+          </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-xs" style={{ borderCollapse: "collapse" }}>
