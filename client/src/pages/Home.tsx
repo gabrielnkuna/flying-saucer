@@ -28,6 +28,8 @@ import SensorFusionDiagram from "@/components/SensorFusionDiagram";
 import PropulsionTradeoff from "@/components/PropulsionTradeoff";
 import GroundTestPlanner from "@/components/GroundTestPlanner";
 import TelemetryHUD from "@/components/TelemetryHUD";
+import VibrationAnalyser from "@/components/VibrationAnalyser";
+import BuildRoadmap from "@/components/BuildRoadmap";
 
 const HERO_IMG = "https://private-us-east-1.manuscdn.com/sessionFile/6YEWa6XfHa3mfksXDACJN4/sandbox/BF8Qe8UjwgOqOT96SxE286-img-1_1771597400000_na1fn_c2F1Y2VyLWhlcm8.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvNllFV2E2WGZIYTNtZmtzWERBQ0pONC9zYW5kYm94L0JGOFFlOFVqd2dPcU9UOTZTeEUyODYtaW1nLTFfMTc3MTU5NzQwMDAwMF9uYTFmbl9jMkYxWTJWeUxXaGxjbTgucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLHdfMTkyMCxoXzE5MjAvZm9ybWF0LHdlYnAvcXVhbGl0eSxxXzgwIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzk4NzYxNjAwfX19XX0_&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=IxnRXrwQL8z6VRSai-YPL1f8RGISpZF5L5A5DnBz5zbwis6P4n4yh20HDcVPt3F3b0f3KjWngrGLKDxWH07HJ2C8RlQa7PzHXb~c7aej~-vVzz9sGuU2d3OtwYvnkoekmO9TZXnNBEUXsRps6jNhAPJ8qMkDJG8FMtOgr9xHwozzjRkZlW3PKQCEnTNH4ffk~EBuYzjsi7cIArXqLlyjTOfj3xBmnoHQyJv-ZPFWrWSSmMru2nP52w~vGHyrHuI6PhMMvEhbFFE7lrW9VqLN78v3tFRSAqfme9oyjWP1w5AR4~Ip5oll5befoicK9j6MZiXpqw2jnp50o2ltEAqy-Q__";
 const UNDERSIDE_IMG = "https://private-us-east-1.manuscdn.com/sessionFile/6YEWa6XfHa3mfksXDACJN4/sandbox/BF8Qe8UjwgOqOT96SxE286-img-2_1771597409000_na1fn_c2F1Y2VyLXVuZGVyc2lkZQ.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvNllFV2E2WGZIYTNtZmtzWERBQ0pONC9zYW5kYm94L0JGOFFlOFVqd2dPcU9UOTZTeEUyODYtaW1nLTJfMTc3MTU5NzQwOTAwMF9uYTFmbl9jMkYxWTJWeUxYVnVaR1Z5YzJsa1pRLnBuZz94LW9zcy1wcm9jZXNzPWltYWdlL3Jlc2l6ZSx3XzE5MjAsaF8xOTIwL2Zvcm1hdCx3ZWJwL3F1YWxpdHkscV84MCIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc5ODc2MTYwMH19fV19&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=IY~HdLtYjwKCJhN912VmeiQi8RG5Rp1C8OT0zJwaGnHNskxLStqG~j7I2pFzwiWMBQKDZpV11EN2DaP-KBl59rjCttXZLvtsbzmTQK5pOxcoI5Pg1XeOgOJsdMrXCR-KydFMAnmb2aei-hMS~iWjlVDAkVj6RD8EfDyAwTQhjgzD~q9nlCKAZPPMXmg7DsWgUcj4HficEBsCfZuaExrQ5kb8RmbOSaMcD3-3Y4i6hSPMlDtaC-74eR4IeNkASFsXMkaiyx~fnONtk1xGYjJr2amYu6L~ld7TLb~pUZco6wyh9tTStlD1JZHXZRmWfMOm1Z2ZbnysCQhKBFDv0hmDgA__";
@@ -59,6 +61,8 @@ const NAV_SECTIONS = [
   { id: "propulsion-tradeoff", label: "Propulsion Matrix", icon: "△" },
   { id: "ground-test", label: "Ground Tests", icon: "✓" },
   { id: "telemetry", label: "Telemetry HUD", icon: "●" },
+  { id: "vibration", label: "Vibration", icon: "∿" },
+  { id: "roadmap", label: "Build Roadmap", icon: "◫" },
 ];
 
 function SectionHeader({ label, title, accent = "cyan" }: { label: string; title: string; accent?: "cyan" | "amber" }) {
@@ -101,7 +105,12 @@ function PropulsionArchCard({ title, tier, color, items }: { title: string; tier
 export default function Home() {
   const [activeSection, setActiveSection] = useState("overview");
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [navSearch, setNavSearch] = useState("");
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+
+  const filteredNav = navSearch.trim()
+    ? NAV_SECTIONS.filter(s => s.label.toLowerCase().includes(navSearch.toLowerCase()))
+    : NAV_SECTIONS;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -152,9 +161,32 @@ export default function Home() {
           )}
         </div>
 
+        {/* Search box */}
+        {sidebarOpen && (
+          <div className="px-3 py-2" style={{ borderBottom: "1px solid oklch(0.18 0.015 240)" }}>
+            <div className="flex items-center gap-2 px-2 py-1.5 rounded-sm" style={{ background: "oklch(0.14 0.018 240)", border: "1px solid oklch(0.22 0.015 240)" }}>
+              <span style={{ fontSize: 10, color: "oklch(0.40 0.015 240)" }}>⌕</span>
+              <input
+                type="text"
+                placeholder="Search sections…"
+                value={navSearch}
+                onChange={e => setNavSearch(e.target.value)}
+                className="flex-1 bg-transparent outline-none"
+                style={{ fontFamily: "'JetBrains Mono'", fontSize: 10, color: "oklch(0.70 0.005 240)", caretColor: "oklch(0.75 0.18 200)" }}
+              />
+              {navSearch && (
+                <button onClick={() => setNavSearch("")} style={{ fontSize: 10, color: "oklch(0.40 0.015 240)" }}>✕</button>
+              )}
+            </div>
+            {navSearch && (
+              <div className="label-caps mt-1" style={{ fontSize: 8, color: "oklch(0.35 0.015 240)" }}>{filteredNav.length} result{filteredNav.length !== 1 ? "s" : ""}</div>
+            )}
+          </div>
+        )}
+
         {/* Nav items */}
         <nav className="flex-1 py-3 overflow-y-auto">
-          {NAV_SECTIONS.map(s => {
+          {filteredNav.map(s => {
             const isActive = activeSection === s.id;
             return (
               <button
@@ -757,10 +789,44 @@ export default function Home() {
           </p>
           <TelemetryHUD />
 
-          {/* Final classification bar v7 */}
+          {/* Classification bar v7 */}
+          <div className="mt-16 flex items-center justify-between py-4" style={{ borderTop: "1px solid oklch(0.18 0.015 240)" }}>
+            <div className="label-caps" style={{ color: "oklch(0.30 0.012 240)" }}>Project Aurora · Engineering Reference v7.0</div>
+            <span className="classified-stamp">TOP SECRET</span>
+          </div>
+        </section>
+
+        {/* ── VIBRATION SIGNATURE ANALYSER ── */}
+        <section
+          id="vibration"
+          ref={el => { sectionRefs.current["vibration"] = el; }}
+          className="px-8 py-16 max-w-6xl"
+          style={{ borderTop: "1px solid oklch(0.16 0.015 240)" }}
+        >
+          <SectionHeader label="Section 25 · Structural" title="Vibration Signature Analyser" accent="cyan" />
+          <p className="text-sm leading-relaxed mb-8" style={{ color: "oklch(0.65 0.008 240)", fontFamily: "'Inter'", maxWidth: 640 }}>
+            Structural vibration spectrum from 10–2000 Hz at four throttle levels. Toggle throttle curves to compare. Dashed vertical lines mark blade-pass frequency harmonics and structural resonance modes. Click any mode in the modal table to see its excitation condition and mitigation strategy.
+          </p>
+          <VibrationAnalyser />
+        </section>
+
+        {/* ── BUILD ROADMAP ── */}
+        <section
+          id="roadmap"
+          ref={el => { sectionRefs.current["roadmap"] = el; }}
+          className="px-8 py-16 max-w-6xl"
+          style={{ borderTop: "1px solid oklch(0.16 0.015 240)" }}
+        >
+          <SectionHeader label="Section 26 · Programme" title="Prototype Build Roadmap" accent="amber" />
+          <p className="text-sm leading-relaxed mb-8" style={{ color: "oklch(0.65 0.008 240)", fontFamily: "'Inter'", maxWidth: 640 }}>
+            68-week development programme across 6 phases: Concept, PDR, CDR, Manufacturing, System Integration, and Flight Test. Click any phase bar or card to expand its deliverables, milestones, and dependencies. The vertical line marks the current programme week.
+          </p>
+          <BuildRoadmap />
+
+          {/* Final classification bar v8 */}
           <div className="mt-16 flex items-center justify-between py-4" style={{ borderTop: "1px solid oklch(0.18 0.015 240)" }}>
             <div className="label-caps" style={{ color: "oklch(0.30 0.012 240)" }}>
-              Project Aurora · Negative Mass Repulsion System · Engineering Reference v7.0
+              Project Aurora · Negative Mass Repulsion System · Engineering Reference v8.0
             </div>
             <div className="flex gap-3">
               <span className="classified-stamp">TOP SECRET</span>
