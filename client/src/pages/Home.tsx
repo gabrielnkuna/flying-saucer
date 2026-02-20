@@ -31,6 +31,7 @@ import TelemetryHUD from "@/components/TelemetryHUD";
 import VibrationAnalyser from "@/components/VibrationAnalyser";
 import BuildRoadmap from "@/components/BuildRoadmap";
 import RnDSpeculation from "@/components/RnDSpeculation";
+import ChangelogModal from "@/components/ChangelogModal";
 
 const HERO_IMG = "https://private-us-east-1.manuscdn.com/sessionFile/6YEWa6XfHa3mfksXDACJN4/sandbox/BF8Qe8UjwgOqOT96SxE286-img-1_1771597400000_na1fn_c2F1Y2VyLWhlcm8.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvNllFV2E2WGZIYTNtZmtzWERBQ0pONC9zYW5kYm94L0JGOFFlOFVqd2dPcU9UOTZTeEUyODYtaW1nLTFfMTc3MTU5NzQwMDAwMF9uYTFmbl9jMkYxWTJWeUxXaGxjbTgucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLHdfMTkyMCxoXzE5MjAvZm9ybWF0LHdlYnAvcXVhbGl0eSxxXzgwIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzk4NzYxNjAwfX19XX0_&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=IxnRXrwQL8z6VRSai-YPL1f8RGISpZF5L5A5DnBz5zbwis6P4n4yh20HDcVPt3F3b0f3KjWngrGLKDxWH07HJ2C8RlQa7PzHXb~c7aej~-vVzz9sGuU2d3OtwYvnkoekmO9TZXnNBEUXsRps6jNhAPJ8qMkDJG8FMtOgr9xHwozzjRkZlW3PKQCEnTNH4ffk~EBuYzjsi7cIArXqLlyjTOfj3xBmnoHQyJv-ZPFWrWSSmMru2nP52w~vGHyrHuI6PhMMvEhbFFE7lrW9VqLN78v3tFRSAqfme9oyjWP1w5AR4~Ip5oll5befoicK9j6MZiXpqw2jnp50o2ltEAqy-Q__";
 const UNDERSIDE_IMG = "https://private-us-east-1.manuscdn.com/sessionFile/6YEWa6XfHa3mfksXDACJN4/sandbox/BF8Qe8UjwgOqOT96SxE286-img-2_1771597409000_na1fn_c2F1Y2VyLXVuZGVyc2lkZQ.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvNllFV2E2WGZIYTNtZmtzWERBQ0pONC9zYW5kYm94L0JGOFFlOFVqd2dPcU9UOTZTeEUyODYtaW1nLTJfMTc3MTU5NzQwOTAwMF9uYTFmbl9jMkYxWTJWeUxYVnVaR1Z5YzJsa1pRLnBuZz94LW9zcy1wcm9jZXNzPWltYWdlL3Jlc2l6ZSx3XzE5MjAsaF8xOTIwL2Zvcm1hdCx3ZWJwL3F1YWxpdHkscV84MCIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc5ODc2MTYwMH19fV19&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=IY~HdLtYjwKCJhN912VmeiQi8RG5Rp1C8OT0zJwaGnHNskxLStqG~j7I2pFzwiWMBQKDZpV11EN2DaP-KBl59rjCttXZLvtsbzmTQK5pOxcoI5Pg1XeOgOJsdMrXCR-KydFMAnmb2aei-hMS~iWjlVDAkVj6RD8EfDyAwTQhjgzD~q9nlCKAZPPMXmg7DsWgUcj4HficEBsCfZuaExrQ5kb8RmbOSaMcD3-3Y4i6hSPMlDtaC-74eR4IeNkASFsXMkaiyx~fnONtk1xGYjJr2amYu6L~ld7TLb~pUZco6wyh9tTStlD1JZHXZRmWfMOm1Z2ZbnysCQhKBFDv0hmDgA__";
@@ -104,15 +105,24 @@ function PropulsionArchCard({ title, tier, color, items }: { title: string; tier
   );
 }
 
+// Sections shown in investor/pitch one-pager mode
+const PITCH_SECTIONS = new Set(["overview", "propulsion", "performance", "bom", "regulatory", "brief"]);
+
 export default function Home() {
   const [activeSection, setActiveSection] = useState("overview");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [navSearch, setNavSearch] = useState("");
+  const [investorMode, setInvestorMode] = useState(false);
+  const [changelogOpen, setChangelogOpen] = useState(false);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
-  const filteredNav = navSearch.trim()
-    ? NAV_SECTIONS.filter(s => s.label.toLowerCase().includes(navSearch.toLowerCase()))
+  const baseNav = investorMode
+    ? NAV_SECTIONS.filter(s => PITCH_SECTIONS.has(s.id))
     : NAV_SECTIONS;
+
+  const filteredNav = navSearch.trim()
+    ? baseNav.filter(s => s.label.toLowerCase().includes(navSearch.toLowerCase()))
+    : baseNav;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -213,6 +223,25 @@ export default function Home() {
           })}
         </nav>
 
+        {/* Investor mode toggle */}
+        {sidebarOpen && (
+          <div className="px-3 py-2" style={{ borderTop: "1px solid oklch(0.18 0.015 240)" }}>
+            <button
+              onClick={() => setInvestorMode(v => !v)}
+              className="w-full flex items-center gap-2 px-2 py-1.5 rounded-sm transition-all"
+              style={{
+                background: investorMode ? "oklch(0.72 0.16 80 / 0.15)" : "oklch(0.14 0.018 240)",
+                border: `1px solid ${investorMode ? "oklch(0.72 0.16 80 / 0.50)" : "oklch(0.22 0.015 240)"}`,
+              }}
+            >
+              <span style={{ fontSize: 10, color: investorMode ? "oklch(0.72 0.16 80)" : "oklch(0.40 0.015 240)" }}>⊡</span>
+              <span className="label-caps" style={{ fontSize: 8, color: investorMode ? "oklch(0.72 0.16 80)" : "oklch(0.40 0.015 240)" }}>
+                {investorMode ? "PITCH MODE ON" : "PITCH MODE"}
+              </span>
+            </button>
+          </div>
+        )}
+
         {/* Toggle button */}
         <button
           onClick={() => setSidebarOpen(v => !v)}
@@ -224,10 +253,23 @@ export default function Home() {
       </aside>
 
       {/* ── Main content ── */}
+      {/* Changelog modal */}
+      {changelogOpen && <ChangelogModal onClose={() => setChangelogOpen(false)} />}
+
       <main
         className="flex-1 overflow-y-auto"
         style={{ marginLeft: sidebarOpen ? 220 : 52, transition: "margin-left 0.25s ease" }}
       >
+        {/* Investor / Pitch mode banner */}
+        {investorMode && (
+          <div className="sticky top-0 z-30 flex items-center justify-between px-8 py-2" style={{ background: "oklch(0.72 0.16 80 / 0.12)", borderBottom: "1px solid oklch(0.72 0.16 80 / 0.40)" }}>
+            <div className="flex items-center gap-3">
+              <span style={{ fontSize: 10, color: "oklch(0.72 0.16 80)" }}>⊡</span>
+              <span className="label-caps" style={{ fontSize: 9, color: "oklch(0.72 0.16 80)" }}>PITCH MODE — showing 6 investor-facing sections only (Overview, Propulsion, Performance, BOM, Regulatory, Technical Brief)</span>
+            </div>
+            <button onClick={() => setInvestorMode(false)} className="label-caps" style={{ fontSize: 8, color: "oklch(0.72 0.16 80 / 0.70)" }}>EXIT ✕</button>
+          </div>
+        )}
 
         {/* ── HERO ── */}
         <section
@@ -476,6 +518,36 @@ export default function Home() {
           style={{ borderTop: "1px solid oklch(0.16 0.015 240)" }}
         >
           <SectionHeader label="Section 07 · Scientific Basis" title="Physics of the Repulsion Illusion" accent="amber" />
+
+          {/* Reality vs Speculation callout banner */}
+          <div className="rounded-sm px-5 py-4 mb-6" style={{ background: "oklch(0.72 0.16 80 / 0.07)", border: "1px solid oklch(0.72 0.16 80 / 0.35)" }}>
+            <div className="label-caps mb-2" style={{ color: "oklch(0.72 0.16 80)" }}>WHAT'S REAL vs. SPECULATIVE</div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[
+                { label: "REAL — Demonstrated in labs", color: "oklch(0.65 0.18 145)", trl: "TRL 3–4", items: ["Negative effective mass in BECs (Khamehchi et al., PRL 2017)", "Acoustic metamaterial negative mass density (Liu et al., Science 2000)", "Analogue gravity / acoustic black holes (Steinhauer, Nature Physics 2016)"] },
+                { label: "SPECULATIVE — No engineering path yet", color: "oklch(0.65 0.22 25)", trl: "TRL 0", items: ["True gravitational repulsion (negative gravitational mass — ruled out for antimatter by ALPHA-g 2023)", "Macroscopic exotic matter with negative energy density (required by Alcubierre metric)", "Casimir-based propulsion (energy density 50 orders of magnitude too small)"] },
+              ].map(col => (
+                <div key={col.label}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="label-caps px-1.5 py-0.5 rounded-sm" style={{ fontSize: 8, background: `${col.color.replace(')', ' / 0.12)')}`, color: col.color, border: `1px solid ${col.color.replace(')', ' / 0.30)')}` }}>{col.trl}</span>
+                    <span className="label-caps" style={{ fontSize: 9, color: col.color }}>{col.label}</span>
+                  </div>
+                  <ul className="space-y-1">
+                    {col.items.map(item => (
+                      <li key={item} className="flex gap-2 items-start">
+                        <span style={{ color: col.color, fontSize: 8, marginTop: 3, flexShrink: 0 }}>▶</span>
+                        <span className="text-xs leading-relaxed" style={{ color: "oklch(0.58 0.008 240)", fontFamily: "'Inter'" }}>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs mt-3" style={{ color: "oklch(0.42 0.010 240)", fontFamily: "'Inter'" }}>
+              Full TRL analysis and literature references in the{" "}
+              <button onClick={() => { const el = document.getElementById('rnd-speculation'); el?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }} className="underline" style={{ color: "oklch(0.72 0.16 80)" }}>R&amp;D Speculation section</button>.
+            </p>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
@@ -856,7 +928,8 @@ export default function Home() {
           {/* Final classification bar v9 */}
           <div className="mt-16 flex items-center justify-between py-4" style={{ borderTop: "1px solid oklch(0.18 0.015 240)" }}>
             <div className="label-caps" style={{ color: "oklch(0.30 0.012 240)" }}>
-              Project Aurora · Repulsion-Illusion Flight System · Engineering Reference v9.0
+              Project Aurora · Repulsion-Illusion Flight System ·{" "}
+              <button onClick={() => setChangelogOpen(true)} className="underline transition-colors" style={{ color: "oklch(0.75 0.18 200 / 0.60)" }}>Engineering Reference v9.0</button>
             </div>
             <div className="flex gap-3">
               <span className="classified-stamp">TOP SECRET</span>
