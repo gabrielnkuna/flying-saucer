@@ -19,6 +19,9 @@ import AcousticAnalyser from "@/components/AcousticAnalyser";
 import ThermalManagement from "@/components/ThermalManagement";
 import RegulatoryCompliance from "@/components/RegulatoryCompliance";
 import ExplodedView from "@/components/ExplodedView";
+import MissionEnergyPlanner from "@/components/MissionEnergyPlanner";
+import WindDisturbanceSimulator from "@/components/WindDisturbanceSimulator";
+import TechnicalBrief from "@/components/TechnicalBrief";
 
 const HERO_IMG = "https://private-us-east-1.manuscdn.com/sessionFile/6YEWa6XfHa3mfksXDACJN4/sandbox/BF8Qe8UjwgOqOT96SxE286-img-1_1771597400000_na1fn_c2F1Y2VyLWhlcm8.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvNllFV2E2WGZIYTNtZmtzWERBQ0pONC9zYW5kYm94L0JGOFFlOFVqd2dPcU9UOTZTeEUyODYtaW1nLTFfMTc3MTU5NzQwMDAwMF9uYTFmbl9jMkYxWTJWeUxXaGxjbTgucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLHdfMTkyMCxoXzE5MjAvZm9ybWF0LHdlYnAvcXVhbGl0eSxxXzgwIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzk4NzYxNjAwfX19XX0_&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=IxnRXrwQL8z6VRSai-YPL1f8RGISpZF5L5A5DnBz5zbwis6P4n4yh20HDcVPt3F3b0f3KjWngrGLKDxWH07HJ2C8RlQa7PzHXb~c7aej~-vVzz9sGuU2d3OtwYvnkoekmO9TZXnNBEUXsRps6jNhAPJ8qMkDJG8FMtOgr9xHwozzjRkZlW3PKQCEnTNH4ffk~EBuYzjsi7cIArXqLlyjTOfj3xBmnoHQyJv-ZPFWrWSSmMru2nP52w~vGHyrHuI6PhMMvEhbFFE7lrW9VqLN78v3tFRSAqfme9oyjWP1w5AR4~Ip5oll5befoicK9j6MZiXpqw2jnp50o2ltEAqy-Q__";
 const UNDERSIDE_IMG = "https://private-us-east-1.manuscdn.com/sessionFile/6YEWa6XfHa3mfksXDACJN4/sandbox/BF8Qe8UjwgOqOT96SxE286-img-2_1771597409000_na1fn_c2F1Y2VyLXVuZGVyc2lkZQ.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvNllFV2E2WGZIYTNtZmtzWERBQ0pONC9zYW5kYm94L0JGOFFlOFVqd2dPcU9UOTZTeEUyODYtaW1nLTJfMTc3MTU5NzQwOTAwMF9uYTFmbl9jMkYxWTJWeUxYVnVaR1Z5YzJsa1pRLnBuZz94LW9zcy1wcm9jZXNzPWltYWdlL3Jlc2l6ZSx3XzE5MjAsaF8xOTIwL2Zvcm1hdCx3ZWJwL3F1YWxpdHkscV84MCIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc5ODc2MTYwMH19fV19&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=IY~HdLtYjwKCJhN912VmeiQi8RG5Rp1C8OT0zJwaGnHNskxLStqG~j7I2pFzwiWMBQKDZpV11EN2DaP-KBl59rjCttXZLvtsbzmTQK5pOxcoI5Pg1XeOgOJsdMrXCR-KydFMAnmb2aei-hMS~iWjlVDAkVj6RD8EfDyAwTQhjgzD~q9nlCKAZPPMXmg7DsWgUcj4HficEBsCfZuaExrQ5kb8RmbOSaMcD3-3Y4i6hSPMlDtaC-74eR4IeNkASFsXMkaiyx~fnONtk1xGYjJr2amYu6L~ld7TLb~pUZco6wyh9tTStlD1JZHXZRmWfMOm1Z2ZbnysCQhKBFDv0hmDgA__";
@@ -41,6 +44,9 @@ const NAV_SECTIONS = [
   { id: "thermal", label: "Thermal Mgmt", icon: "☀" },
   { id: "regulatory", label: "Regulatory", icon: "⚖" },
   { id: "exploded", label: "Exploded View", icon: "⦿" },
+  { id: "energy", label: "Energy Planner", icon: "⚡" },
+  { id: "wind", label: "Wind Sim", icon: "≋" },
+  { id: "brief", label: "Technical Brief", icon: "⎙" },
 ];
 
 function SectionHeader({ label, title, accent = "cyan" }: { label: string; title: string; accent?: "cyan" | "amber" }) {
@@ -595,10 +601,58 @@ export default function Home() {
           </p>
           <ExplodedView />
 
-          {/* Final classification bar v4 */}
+          {/* Classification bar v4 */}
+          <div className="mt-16 flex items-center justify-between py-4" style={{ borderTop: "1px solid oklch(0.18 0.015 240)" }}>
+            <div className="label-caps" style={{ color: "oklch(0.30 0.012 240)" }}>Project Aurora · Engineering Reference v4.0</div>
+            <span className="classified-stamp">TOP SECRET</span>
+          </div>
+        </section>
+
+        {/* ── MISSION ENERGY PLANNER ── */}
+        <section
+          id="energy"
+          ref={el => { sectionRefs.current["energy"] = el; }}
+          className="px-8 py-16 max-w-6xl"
+          style={{ borderTop: "1px solid oklch(0.16 0.015 240)" }}
+        >
+          <SectionHeader label="Section 16 · Energy" title="Mission Energy Planner" accent="amber" />
+          <p className="text-sm leading-relaxed mb-8" style={{ color: "oklch(0.65 0.008 240)", fontFamily: "'Inter'", maxWidth: 640 }}>
+            Build a custom flight profile from hover, flat-glide, burst manoeuvre, and systems-idle segments. The planner computes total energy draw against the 55 kWh battery, plots the state-of-charge curve, and reports estimated hover reserve and warnings when the profile exceeds the usable energy budget.
+          </p>
+          <MissionEnergyPlanner />
+        </section>
+
+        {/* ── WIND DISTURBANCE SIMULATOR ── */}
+        <section
+          id="wind"
+          ref={el => { sectionRefs.current["wind"] = el; }}
+          className="px-8 py-16 max-w-6xl"
+          style={{ borderTop: "1px solid oklch(0.16 0.015 240)" }}
+        >
+          <SectionHeader label="Section 17 · Disturbance" title="Wind Disturbance Simulator" accent="cyan" />
+          <p className="text-sm leading-relaxed mb-8" style={{ color: "oklch(0.65 0.008 240)", fontFamily: "'Inter'", maxWidth: 640 }}>
+            Set wind speed and direction via sliders or compass. The control stack calculates the per-fan throttle compensation required to null the wind force and maintain position hold. The fan ring diagram shows colour-coded throttle boosts and reductions, with residual drift reported when compensation is saturated.
+          </p>
+          <WindDisturbanceSimulator />
+        </section>
+
+        {/* ── TECHNICAL BRIEF ── */}
+        <section
+          id="brief"
+          ref={el => { sectionRefs.current["brief"] = el; }}
+          className="px-8 py-16 max-w-6xl"
+          style={{ borderTop: "1px solid oklch(0.16 0.015 240)" }}
+        >
+          <SectionHeader label="Section 18 · Export" title="Technical Brief" accent="amber" />
+          <p className="text-sm leading-relaxed mb-8" style={{ color: "oklch(0.65 0.008 240)", fontFamily: "'Inter'", maxWidth: 640 }}>
+            A consolidated single-page technical brief covering all key specifications, BOM summary, performance envelope, control architecture, regulatory compliance status, and open risks. Use the Print button to export as a PDF or send to a printer.
+          </p>
+          <TechnicalBrief />
+
+          {/* Final classification bar v5 */}
           <div className="mt-16 flex items-center justify-between py-4" style={{ borderTop: "1px solid oklch(0.18 0.015 240)" }}>
             <div className="label-caps" style={{ color: "oklch(0.30 0.012 240)" }}>
-              Project Aurora · Negative Mass Repulsion System · Engineering Reference v4.0
+              Project Aurora · Negative Mass Repulsion System · Engineering Reference v5.0
             </div>
             <div className="flex gap-3">
               <span className="classified-stamp">TOP SECRET</span>
