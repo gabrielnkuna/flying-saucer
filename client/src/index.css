@@ -232,6 +232,52 @@
   }
 }
 
+/* ── Light / Clean Room Theme ──────────────────────────────── */
+/* Applied via .light-theme class on the root wrapper */
+.light-theme {
+  --background: oklch(0.97 0.004 240);
+  --foreground: oklch(0.18 0.020 240);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.020 240);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.020 240);
+  --primary: oklch(0.45 0.18 200);
+  --primary-foreground: oklch(0.97 0.004 240);
+  --secondary: oklch(0.92 0.006 240);
+  --secondary-foreground: oklch(0.30 0.015 240);
+  --muted: oklch(0.93 0.005 240);
+  --muted-foreground: oklch(0.50 0.015 240);
+  --accent: oklch(0.60 0.14 80);
+  --accent-foreground: oklch(0.97 0.004 240);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.97 0.004 240);
+  --border: oklch(0.84 0.010 240);
+  --input: oklch(0.90 0.008 240);
+  --ring: oklch(0.45 0.18 200);
+  --sidebar: oklch(0.94 0.006 240);
+  --sidebar-foreground: oklch(0.22 0.018 240);
+  --sidebar-primary: oklch(0.45 0.18 200);
+  --sidebar-primary-foreground: oklch(0.97 0.004 240);
+  --sidebar-accent: oklch(0.90 0.008 240);
+  --sidebar-accent-foreground: oklch(0.22 0.018 240);
+  --sidebar-border: oklch(0.84 0.010 240);
+  --sidebar-ring: oklch(0.45 0.18 200);
+  /* Override navy custom tokens */
+  --color-navy-deep: oklch(0.97 0.004 240);
+  --color-navy-surface: oklch(0.93 0.005 240);
+  --color-navy-raised: oklch(0.88 0.008 240);
+  --color-navy-border: oklch(0.80 0.010 240);
+  --color-cyan-glow: oklch(0.45 0.18 200);
+  --color-amber-spec: oklch(0.55 0.16 80);
+}
+
+.light-theme body,
+.light-theme .bg-background { background-color: oklch(0.97 0.004 240); }
+.light-theme .label-caps { color: oklch(0.42 0.015 240); }
+.light-theme .classified-stamp { color: oklch(0.55 0.22 25 / 0.7); border-color: oklch(0.55 0.22 25 / 0.4); }
+.light-theme ::-webkit-scrollbar-track { background: oklch(0.92 0.006 240); }
+.light-theme ::-webkit-scrollbar-thumb { background: oklch(0.70 0.015 240); }
+
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 6px;

@@ -32,6 +32,8 @@ import VibrationAnalyser from "@/components/VibrationAnalyser";
 import BuildRoadmap from "@/components/BuildRoadmap";
 import RnDSpeculation from "@/components/RnDSpeculation";
 import ChangelogModal from "@/components/ChangelogModal";
+import ShareModal from "@/components/ShareModal";
+import ConfigComparison from "@/components/ConfigComparison";
 
 const HERO_IMG = "https://private-us-east-1.manuscdn.com/sessionFile/6YEWa6XfHa3mfksXDACJN4/sandbox/BF8Qe8UjwgOqOT96SxE286-img-1_1771597400000_na1fn_c2F1Y2VyLWhlcm8.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvNllFV2E2WGZIYTNtZmtzWERBQ0pONC9zYW5kYm94L0JGOFFlOFVqd2dPcU9UOTZTeEUyODYtaW1nLTFfMTc3MTU5NzQwMDAwMF9uYTFmbl9jMkYxWTJWeUxXaGxjbTgucG5nP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLHdfMTkyMCxoXzE5MjAvZm9ybWF0LHdlYnAvcXVhbGl0eSxxXzgwIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzk4NzYxNjAwfX19XX0_&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=IxnRXrwQL8z6VRSai-YPL1f8RGISpZF5L5A5DnBz5zbwis6P4n4yh20HDcVPt3F3b0f3KjWngrGLKDxWH07HJ2C8RlQa7PzHXb~c7aej~-vVzz9sGuU2d3OtwYvnkoekmO9TZXnNBEUXsRps6jNhAPJ8qMkDJG8FMtOgr9xHwozzjRkZlW3PKQCEnTNH4ffk~EBuYzjsi7cIArXqLlyjTOfj3xBmnoHQyJv-ZPFWrWSSmMru2nP52w~vGHyrHuI6PhMMvEhbFFE7lrW9VqLN78v3tFRSAqfme9oyjWP1w5AR4~Ip5oll5befoicK9j6MZiXpqw2jnp50o2ltEAqy-Q__";
 const UNDERSIDE_IMG = "https://private-us-east-1.manuscdn.com/sessionFile/6YEWa6XfHa3mfksXDACJN4/sandbox/BF8Qe8UjwgOqOT96SxE286-img-2_1771597409000_na1fn_c2F1Y2VyLXVuZGVyc2lkZQ.png?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvNllFV2E2WGZIYTNtZmtzWERBQ0pONC9zYW5kYm94L0JGOFFlOFVqd2dPcU9UOTZTeEUyODYtaW1nLTJfMTc3MTU5NzQwOTAwMF9uYTFmbl9jMkYxWTJWeUxYVnVaR1Z5YzJsa1pRLnBuZz94LW9zcy1wcm9jZXNzPWltYWdlL3Jlc2l6ZSx3XzE5MjAsaF8xOTIwL2Zvcm1hdCx3ZWJwL3F1YWxpdHkscV84MCIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc5ODc2MTYwMH19fV19&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=IY~HdLtYjwKCJhN912VmeiQi8RG5Rp1C8OT0zJwaGnHNskxLStqG~j7I2pFzwiWMBQKDZpV11EN2DaP-KBl59rjCttXZLvtsbzmTQK5pOxcoI5Pg1XeOgOJsdMrXCR-KydFMAnmb2aei-hMS~iWjlVDAkVj6RD8EfDyAwTQhjgzD~q9nlCKAZPPMXmg7DsWgUcj4HficEBsCfZuaExrQ5kb8RmbOSaMcD3-3Y4i6hSPMlDtaC-74eR4IeNkASFsXMkaiyx~fnONtk1xGYjJr2amYu6L~ld7TLb~pUZco6wyh9tTStlD1JZHXZRmWfMOm1Z2ZbnysCQhKBFDv0hmDgA__";
@@ -66,6 +68,7 @@ const NAV_SECTIONS = [
   { id: "vibration", label: "Vibration", icon: "∿" },
   { id: "roadmap", label: "Build Roadmap", icon: "◫" },
   { id: "rnd-speculation", label: "R\u0026D Speculation", icon: "Ψ" },
+  { id: "config-comparison", label: "Config Compare", icon: "⇄" },
 ];
 
 function SectionHeader({ label, title, accent = "cyan" }: { label: string; title: string; accent?: "cyan" | "amber" }) {
@@ -114,7 +117,23 @@ export default function Home() {
   const [navSearch, setNavSearch] = useState("");
   const [investorMode, setInvestorMode] = useState(false);
   const [changelogOpen, setChangelogOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [lightTheme, setLightTheme] = useState(false);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+
+  // Read URL hash on mount to restore shared state
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (!hash) return;
+    const params = new URLSearchParams(hash);
+    const section = params.get("s");
+    const pitch   = params.get("pitch") === "1";
+    if (section) {
+      setActiveSection(section);
+      setTimeout(() => sectionRefs.current[section]?.scrollIntoView({ behavior: "smooth", block: "start" }), 400);
+    }
+    if (pitch) setInvestorMode(true);
+  }, []);
 
   const baseNav = investorMode
     ? NAV_SECTIONS.filter(s => PITCH_SECTIONS.has(s.id))
@@ -144,7 +163,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex" style={{ background: "oklch(0.10 0.025 240)" }}>
+    <div className={`min-h-screen flex${lightTheme ? " light-theme" : ""}`} style={{ background: lightTheme ? "oklch(0.97 0.004 240)" : "oklch(0.10 0.025 240)" }}>
 
       {/* ── Sidebar ── */}
       <aside
@@ -223,6 +242,39 @@ export default function Home() {
           })}
         </nav>
 
+        {/* Theme + Share buttons */}
+        {sidebarOpen && (
+          <div className="px-3 py-2 flex gap-2" style={{ borderTop: "1px solid oklch(0.18 0.015 240)" }}>
+            {/* Theme toggle */}
+            <button
+              onClick={() => setLightTheme(v => !v)}
+              className="flex-1 flex items-center gap-1.5 px-2 py-1.5 rounded-sm transition-all"
+              style={{
+                background: lightTheme ? "oklch(0.45 0.18 200 / 0.10)" : "oklch(0.14 0.018 240)",
+                border: `1px solid ${lightTheme ? "oklch(0.45 0.18 200 / 0.45)" : "oklch(0.22 0.015 240)"}`,
+              }}
+              title={lightTheme ? "Switch to Dark Mode" : "Switch to Light Mode"}
+            >
+              <span style={{ fontSize: 10, color: lightTheme ? "oklch(0.45 0.18 200)" : "oklch(0.40 0.015 240)" }}>
+                {lightTheme ? "☀" : "☽"}
+              </span>
+              <span className="label-caps" style={{ fontSize: 7, color: lightTheme ? "oklch(0.45 0.18 200)" : "oklch(0.40 0.015 240)" }}>
+                {lightTheme ? "LIGHT" : "DARK"}
+              </span>
+            </button>
+            {/* Share button */}
+            <button
+              onClick={() => setShareOpen(true)}
+              className="flex-1 flex items-center gap-1.5 px-2 py-1.5 rounded-sm transition-all"
+              style={{ background: "oklch(0.14 0.018 240)", border: "1px solid oklch(0.22 0.015 240)" }}
+              title="Share this view"
+            >
+              <span style={{ fontSize: 10, color: "oklch(0.40 0.015 240)" }}>⤴</span>
+              <span className="label-caps" style={{ fontSize: 7, color: "oklch(0.40 0.015 240)" }}>SHARE</span>
+            </button>
+          </div>
+        )}
+
         {/* Investor mode toggle */}
         {sidebarOpen && (
           <div className="px-3 py-2" style={{ borderTop: "1px solid oklch(0.18 0.015 240)" }}>
@@ -255,6 +307,8 @@ export default function Home() {
       {/* ── Main content ── */}
       {/* Changelog modal */}
       {changelogOpen && <ChangelogModal onClose={() => setChangelogOpen(false)} />}
+      {/* Share modal */}
+      {shareOpen && <ShareModal currentSection={activeSection} pitchMode={investorMode} onClose={() => setShareOpen(false)} />}
 
       <main
         className="flex-1 overflow-y-auto"
@@ -926,10 +980,25 @@ export default function Home() {
           <RnDSpeculation />
 
           {/* Final classification bar v9 */}
+        </section>
+
+        {/* ── CONFIG COMPARISON ── */}
+        <section
+          id="config-comparison"
+          ref={el => { sectionRefs.current["config-comparison"] = el; }}
+          className="px-8 py-16 max-w-6xl"
+          style={{ borderTop: "1px solid oklch(0.16 0.015 240)" }}
+        >
+          <SectionHeader label="Section 29 · Configuration Comparison" title="Side-by-Side Config Analyser" accent="cyan" />
+          <p className="text-sm leading-relaxed mb-8" style={{ color: "oklch(0.65 0.008 240)", fontFamily: "'Inter'", maxWidth: 640 }}>
+            Pin a baseline configuration and compare it against a modified design. Adjust diameter, hull material, and battery chemistry independently for each configuration. Delta values show the net change in mass, power, endurance, cost, and regulatory status.
+          </p>
+          <ConfigComparison />
+
           <div className="mt-16 flex items-center justify-between py-4" style={{ borderTop: "1px solid oklch(0.18 0.015 240)" }}>
             <div className="label-caps" style={{ color: "oklch(0.30 0.012 240)" }}>
               Project Aurora · Repulsion-Illusion Flight System ·{" "}
-              <button onClick={() => setChangelogOpen(true)} className="underline transition-colors" style={{ color: "oklch(0.75 0.18 200 / 0.60)" }}>Engineering Reference v9.0</button>
+              <button onClick={() => setChangelogOpen(true)} className="underline transition-colors" style={{ color: "oklch(0.75 0.18 200 / 0.60)" }}>Engineering Reference v10.0</button>
             </div>
             <div className="flex gap-3">
               <span className="classified-stamp">TOP SECRET</span>
