@@ -113,7 +113,17 @@ const PITCH_SECTIONS = new Set(["overview", "propulsion", "performance", "bom", 
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState("overview");
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  // Auto-collapse sidebar on mobile (< 768px)
+  const [sidebarOpen, setSidebarOpen] = useState(() => typeof window !== "undefined" ? window.innerWidth >= 768 : true);
+
+  // Keep sidebar collapsed on resize to mobile
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) setSidebarOpen(false);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   const [navSearch, setNavSearch] = useState("");
   const [investorMode, setInvestorMode] = useState(false);
   const [changelogOpen, setChangelogOpen] = useState(false);
@@ -342,7 +352,8 @@ export default function Home() {
           <div className="absolute inset-0 scanline pointer-events-none" />
 
           {/* Hero content */}
-          <div className="relative z-10 flex flex-col justify-end h-screen px-8 pb-16 max-w-4xl">
+          <div className="relative z-10 flex flex-col min-h-screen px-6 md:px-8 pt-8 pb-10 max-w-4xl">
+            {/* Top: title block */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -354,14 +365,14 @@ export default function Home() {
                   CLEARANCE LEVEL 5
                 </span>
               </div>
-              <h1 style={{ fontFamily: "'Rajdhani'", fontSize: "clamp(2.5rem, 6vw, 4.5rem)", fontWeight: 700, color: "oklch(0.95 0.005 240)", letterSpacing: "0.05em", lineHeight: 1, marginBottom: 16 }}>
+              <h1 style={{ fontFamily: "'Rajdhani'", fontSize: "clamp(2rem, 6vw, 4.5rem)", fontWeight: 700, color: "oklch(0.95 0.005 240)", letterSpacing: "0.05em", lineHeight: 1.05, marginBottom: 16 }}>
                 PROJECT AURORA
                 <br />
                 <span style={{ color: "oklch(0.75 0.18 200)" }}>REPULSION-ILLUSION</span>
                 <br />
                 FLIGHT SYSTEM
               </h1>
-              <p style={{ fontFamily: "'Inter'", fontSize: "clamp(0.85rem, 1.5vw, 1rem)", color: "oklch(0.70 0.008 240)", maxWidth: 560, lineHeight: 1.6, marginBottom: 8 }}>
+              <p style={{ fontFamily: "'Inter'", fontSize: "clamp(0.82rem, 1.5vw, 1rem)", color: "oklch(0.70 0.008 240)", maxWidth: 560, lineHeight: 1.6, marginBottom: 8 }}>
                 A flying saucer-scale craft engineered to produce a convincing repulsion-illusion through distributed ducted lift, segmented thrust vectoring, and a four-layer control architecture — no exotic matter required.
               </p>
               <p style={{ fontFamily: "'Inter'", fontSize: "0.78rem", color: "oklch(0.50 0.010 240)", maxWidth: 560, lineHeight: 1.5, marginBottom: 24 }}>
@@ -369,6 +380,17 @@ export default function Home() {
                 <button onClick={() => { document.getElementById("rnd-speculation")?.scrollIntoView({ behavior: "smooth", block: "start" }); }} style={{ color: "oklch(0.75 0.18 200)", textDecoration: "underline", background: "none", border: "none", cursor: "pointer", fontFamily: "'Inter'", fontSize: "0.78rem" }}>R&amp;D Speculation</button>{" "}
                 section.
               </p>
+            </motion.div>
+
+            {/* Spacer pushes KPI cards toward bottom */}
+            <div className="flex-1" />
+
+            {/* Bottom: KPI cards */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+            >
               <div className="flex flex-wrap gap-3">
                 {[
                   { label: "Diameter", value: "4–8 m", note: null, color: "oklch(0.75 0.18 200)" },
