@@ -1,5 +1,6 @@
 import * as React from "react";
 import AllocatorKpiGrid from "@/components/AllocatorKpiGrid";
+import FlapRing32 from "@/components/allocator/FlapRing32";
 import { loadJson, fmt } from "@/lib/loadJson";
 import { computeGateDHeadlineFromTrace, type TraceV4 } from "@/lib/gateDFromHist";
 
@@ -192,6 +193,10 @@ export default function V4RepelCard({ url, autoPlay = false }: { url: string; au
   if (!headline) return <div className="text-sm opacity-50 font-mono p-4">Loaded trace — computing headline…</div>;
 
   const N = trace.hist?.t?.length ?? 0;
+  const alphaDeg32: number[] = (trace.hist?.alpha_deg_32 as number[][] | undefined)?.[idx] ?? [];
+  const ftTan32: number[] | undefined = (trace.hist?.ft_tan_32 as number[][] | undefined)?.[idx];
+  const fxCmd = (trace.hist?.fx_cmd as number[] | undefined)?.[idx] ?? 0;
+  const fyCmd = (trace.hist?.fy_cmd as number[] | undefined)?.[idx] ?? 0;
 
   return (
     <div className="grid gap-4">
@@ -218,34 +223,48 @@ export default function V4RepelCard({ url, autoPlay = false }: { url: string; au
         entry@ {fmt(headline.enter_radius_time_s, 2)}s · v_rad_enter {fmt(headline.v_rad_enter_mps, 2)} m/s · vmax {fmt(headline.repel_speed_mps_max, 2)} m/s · yaw–track {fmt(headline.yaw_track_coupling_mean_abs_deg, 1)}°
       </div>
 
-      {/* Replay canvas */}
-      <div className="rounded-lg border border-white/10 bg-[#020817] p-3">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-[10px] font-mono uppercase tracking-widest opacity-60">Top-Down Replay</span>
-          <div className="flex gap-2">
-            <button
-              onClick={() => { setIdx(0); setPlaying(false); }}
-              className="text-[10px] font-mono px-2 py-0.5 rounded border border-white/10 hover:border-cyan-500/40 transition-colors"
-            >RESET</button>
-            <button
-              onClick={() => { if (idx >= N - 1) setIdx(0); setPlaying((p) => !p); }}
-              className="text-[10px] font-mono px-3 py-0.5 rounded border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10 transition-colors"
-            >{playing ? "PAUSE" : "PLAY"}</button>
+      {/* Replay canvas + FlapRing32 — 2-column grid */}
+      <div className="grid md:grid-cols-2 gap-3">
+        <div className="rounded-lg border border-white/10 bg-[#020817] p-3">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[10px] font-mono uppercase tracking-widest opacity-60">Top-Down Replay</span>
+            <div className="flex gap-2">
+              <button
+                onClick={() => { setIdx(0); setPlaying(false); }}
+                className="text-[10px] font-mono px-2 py-0.5 rounded border border-white/10 hover:border-cyan-500/40 transition-colors"
+              >RESET</button>
+              <button
+                onClick={() => { if (idx >= N - 1) setIdx(0); setPlaying((p) => !p); }}
+                className="text-[10px] font-mono px-3 py-0.5 rounded border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10 transition-colors"
+              >{playing ? "PAUSE" : "PLAY"}</button>
+            </div>
+          </div>
+          <canvas ref={canvasRef} style={{ width: "100%", height: 280, display: "block" }} />
+          <input
+            className="w-full mt-3 accent-cyan-500"
+            type="range"
+            min={0}
+            max={Math.max(0, N - 1)}
+            value={idx}
+            onChange={(e) => { setPlaying(false); setIdx(parseInt(e.target.value, 10)); }}
+          />
+          <div className="text-[10px] opacity-40 mt-1 font-mono flex justify-between">
+            <span>frame {idx} / {Math.max(0, N - 1)}</span>
+            <span>{N} samples · {fmt((N > 0 && trace.hist?.t ? Number(trace.hist.t[N-1]) : 0), 1)} s total</span>
           </div>
         </div>
-        <canvas ref={canvasRef} style={{ width: "100%", height: 280, display: "block" }} />
-        <input
-          className="w-full mt-3 accent-cyan-500"
-          type="range"
-          min={0}
-          max={Math.max(0, N - 1)}
-          value={idx}
-          onChange={(e) => { setPlaying(false); setIdx(parseInt(e.target.value, 10)); }}
+
+        <FlapRing32
+          alphaDeg32={alphaDeg32}
+          ftTan32={ftTan32}
+          fxCmd={fxCmd}
+          fyCmd={fyCmd}
+          size={300}
+          maxAlphaDeg={30}
+          title="Flap Ring (32) — current frame"
+          showLabels={true}
+          showForceArrow={true}
         />
-        <div className="text-[10px] opacity-40 mt-1 font-mono flex justify-between">
-          <span>frame {idx} / {Math.max(0, N - 1)}</span>
-          <span>{N} samples · {fmt((N > 0 && trace.hist?.t ? Number(trace.hist.t[N-1]) : 0), 1)} s total</span>
-        </div>
       </div>
     </div>
   );
