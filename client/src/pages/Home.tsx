@@ -287,6 +287,30 @@ export default function Home() {
           </div>
         )}
 
+        {/* Allocator + Gates links */}
+        {sidebarOpen && (
+          <div className="px-3 py-2 flex gap-2" style={{ borderTop: "1px solid oklch(0.18 0.015 240)" }}>
+            <a
+              href="/allocator"
+              className="flex-1 flex items-center gap-1.5 px-2 py-1.5 rounded-sm transition-all hover:opacity-80"
+              style={{ background: "oklch(0.14 0.018 240)", border: "1px solid oklch(0.22 0.015 240)" }}
+              title="Allocator Dashboard"
+            >
+              <span style={{ fontSize: 10, color: "oklch(0.55 0.18 200)" }}>⟁</span>
+              <span className="label-caps" style={{ fontSize: 7, color: "oklch(0.55 0.18 200)" }}>ALLOCATOR</span>
+            </a>
+            <a
+              href="/gates"
+              className="flex-1 flex items-center gap-1.5 px-2 py-1.5 rounded-sm transition-all hover:opacity-80"
+              style={{ background: "oklch(0.14 0.018 240)", border: "1px solid oklch(0.22 0.015 240)" }}
+              title="Flight Gates A–D"
+            >
+              <span style={{ fontSize: 10, color: "oklch(0.55 0.18 200)" }}>◈</span>
+              <span className="label-caps" style={{ fontSize: 7, color: "oklch(0.55 0.18 200)" }}>GATES</span>
+            </a>
+          </div>
+        )}
+
         {/* Investor mode toggle */}
         {sidebarOpen && (
           <div className="px-3 py-2" style={{ borderTop: "1px solid oklch(0.18 0.015 240)" }}>

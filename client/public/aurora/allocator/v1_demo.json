@@ -1,0 +1,12 @@
+{
+  "allocator_version": "v1",
+  "dir_deg": 90.0,
+  "fxy_n": 320.5,
+  "yaw_track_coupling_mean_abs_deg": 4.12,
+  "final": {
+    "y_m": 19.87,
+    "vy_mps": 1.42,
+    "alpha_deg_rms": 6.31,
+    "mz_est_nm": 38.7
+  }
+}

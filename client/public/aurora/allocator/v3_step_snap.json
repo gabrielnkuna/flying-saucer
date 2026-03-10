@@ -1,0 +1,12 @@
+{
+  "version": "v3-snap",
+  "step_metrics": {
+    "speed_at_step_mps": 2.11,
+    "speed_at_snap_end_mps": 0.09,
+    "t_to_speed_below_thr_s": 0.62,
+    "snap_stop_distance_m": 0.47,
+    "t_reversal_s": 0.88,
+    "t90_dir_s": 0.41,
+    "yaw_track_coupling_mean_abs_deg": 3.94
+  }
+}

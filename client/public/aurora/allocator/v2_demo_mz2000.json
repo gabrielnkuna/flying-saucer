@@ -1,0 +1,12 @@
+{
+  "allocator_version": "v2",
+  "mz_nm_cmd": 2000.0,
+  "yaw_track_coupling_mean_abs_deg": 4.11,
+  "final": {
+    "y_m": 19.88,
+    "vy_mps": 1.43,
+    "alpha_deg_rms": 6.35,
+    "ft_tan_rms": 18.74,
+    "mz_est_nm": 1987.3
+  }
+}

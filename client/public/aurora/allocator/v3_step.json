@@ -1,0 +1,10 @@
+{
+  "version": "v3",
+  "step_metrics": {
+    "t90_dir_s": 0.38,
+    "t_reversal_s": 0.71,
+    "min_speed_transition_mps": 0.08,
+    "peak_speed_mps": 2.14,
+    "yaw_track_coupling_mean_abs_deg": 3.87
+  }
+}
