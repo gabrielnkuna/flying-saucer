@@ -130,7 +130,7 @@ export default function Allocator() {
             <V3StepSnapCard url={`${BASE}/v3_step_snap.json`} />
           )}
           {active === "v4" && (
-            <V4RepelCard url={`${BASE}/v4_repel_wall.json`} />
+            <V4RepelCard key="v4" url={`${BASE}/v4_repel_wall.json`} autoPlay />
           )}
         </div>
 

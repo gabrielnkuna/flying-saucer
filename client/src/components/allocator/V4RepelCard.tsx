@@ -3,7 +3,7 @@ import AllocatorKpiGrid from "@/components/AllocatorKpiGrid";
 import { loadJson, fmt } from "@/lib/loadJson";
 import { computeGateDHeadlineFromTrace, type TraceV4 } from "@/lib/gateDFromHist";
 
-export default function V4RepelCard({ url }: { url: string }) {
+export default function V4RepelCard({ url, autoPlay = false }: { url: string; autoPlay?: boolean }) {
   const [trace, setTrace] = React.useState<TraceV4 | null>(null);
   const [err, setErr] = React.useState<string | null>(null);
   const [idx, setIdx] = React.useState(0);
@@ -18,10 +18,14 @@ export default function V4RepelCard({ url }: { url: string }) {
         if (!alive) return;
         setTrace(d);
         setIdx(0);
+        if (autoPlay) {
+          // Short delay so the canvas has time to render before playback starts
+          setTimeout(() => { if (alive) setPlaying(true); }, 500);
+        }
       })
       .catch((e) => alive && setErr(e?.message ?? String(e)));
     return () => { alive = false; };
-  }, [url]);
+  }, [url, autoPlay]);
 
   // Auto-play logic
   React.useEffect(() => {
