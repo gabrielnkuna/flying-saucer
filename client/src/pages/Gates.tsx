@@ -57,9 +57,19 @@ export default function Gates() {
             </span>
             <span className="text-[10px] font-mono opacity-40 uppercase tracking-widest">SITL / HITL / Hardware</span>
           </div>
-          <h1 className="text-lg font-bold" style={{ fontFamily: "'Rajdhani', sans-serif", letterSpacing: "0.05em" }}>
-            FLIGHT GATES A–D
-          </h1>
+          <div className="flex items-center justify-between gap-4">
+            <h1 className="text-lg font-bold" style={{ fontFamily: "'Rajdhani', sans-serif", letterSpacing: "0.05em" }}>
+              FLIGHT GATES A–D
+            </h1>
+            <a
+              href="/"
+              className="flex items-center gap-2 px-3 py-1.5 rounded text-xs font-mono transition-all hover:opacity-80 shrink-0"
+              style={{ background: "oklch(0.14 0.018 240)", border: "1px solid oklch(0.55 0.18 200 / 0.35)", color: "oklch(0.55 0.18 200)" }}
+            >
+              <span style={{ fontSize: 11 }}>◀</span>
+              <span className="uppercase tracking-widest" style={{ fontSize: 9 }}>Main Dashboard</span>
+            </a>
+          </div>
         </div>
       </div>
 

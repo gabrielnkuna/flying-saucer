@@ -39,6 +39,14 @@ export default function Allocator() {
               THRUST ALLOCATOR DASHBOARD
             </h1>
           </div>
+          <a
+            href="/"
+            className="flex items-center gap-2 px-3 py-1.5 rounded text-xs font-mono transition-all hover:opacity-80"
+            style={{ background: "oklch(0.14 0.018 240)", border: "1px solid oklch(0.55 0.18 200 / 0.35)", color: "oklch(0.55 0.18 200)" }}
+          >
+            <span style={{ fontSize: 11 }}>◀</span>
+            <span className="uppercase tracking-widest" style={{ fontSize: 9 }}>Main Dashboard</span>
+          </a>
           <div className="text-[10px] font-mono opacity-40 text-right hidden sm:block">
             <div>V1 → V4 PROGRESSION</div>
             <div>JSON: /aurora/allocator/*.json</div>
