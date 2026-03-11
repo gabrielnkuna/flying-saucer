@@ -103,7 +103,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       {payload.map((p: any) => (
         <div key={p.dataKey} style={{ fontFamily: "'JetBrains Mono'", fontSize: 11, color: p.color, display: "flex", justifyContent: "space-between", gap: 12 }}>
           <span>{p.name}</span>
-          <span>{p.value} dB</span>
+          <span>{typeof p.value === 'number' && isFinite(p.value) ? p.value.toFixed(1) : '—'} dB</span>
         </div>
       ))}
     </div>

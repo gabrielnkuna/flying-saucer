@@ -189,10 +189,17 @@ export default function DemoGates() {
           );
           const radarData = gate.metrics.map(m => ({
             metric: m.name.split(" ")[0],
-            score: m.latest === null ? 0 : Math.min(100, m.lowerIsBetter
-              ? Math.max(0, (1 - m.latest / (m.limit * 1.5)) * 100)
-              : Math.max(0, (m.latest / (m.limit * 1.2)) * 100)
-            ),
+            score: (() => {
+              if (m.latest === null) return 0;
+              if (m.lowerIsBetter) {
+                // Special case: limit=0 means "must be exactly 0" → score 100 if latest=0, else 0
+                if (m.limit === 0) return m.latest === 0 ? 100 : 0;
+                return Math.min(100, Math.max(0, (1 - m.latest / (m.limit * 1.5)) * 100));
+              } else {
+                if (m.limit === 0) return 0;
+                return Math.min(100, Math.max(0, (m.latest / (m.limit * 1.2)) * 100));
+              }
+            })(),
           }));
 
           return (

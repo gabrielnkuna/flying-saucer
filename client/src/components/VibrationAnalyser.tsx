@@ -101,7 +101,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       <div style={{ fontFamily: "'JetBrains Mono'", fontSize: 10, color: "oklch(0.55 0.015 240)", marginBottom: 4 }}>{label} Hz</div>
       {payload.map((p: any) => (
         <div key={p.name} style={{ fontFamily: "'JetBrains Mono'", fontSize: 10, color: p.color }}>
-          {p.name}: {p.value?.toFixed(1)} dB
+          {p.name}: {typeof p.value === 'number' && isFinite(p.value) ? p.value.toFixed(1) : '—'} dB
         </div>
       ))}
     </div>

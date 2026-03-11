@@ -5,12 +5,17 @@ import FanRing16 from "@/components/allocator/FanRing16";
 import { loadJson, fmt } from "@/lib/loadJson";
 import { computeGateDHeadlineFromTrace, type TraceV4 } from "@/lib/gateDFromHist";
 
+const SPEED_OPTIONS = [0.25, 0.5, 1, 2, 4] as const;
+type SpeedOption = (typeof SPEED_OPTIONS)[number];
+
 export default function V4RepelCard({ url, autoPlay = false }: { url: string; autoPlay?: boolean }) {
   const [trace, setTrace] = React.useState<TraceV4 | null>(null);
   const [err, setErr] = React.useState<string | null>(null);
   const [idx, setIdx] = React.useState(0);
   const [playing, setPlaying] = React.useState(false);
+  const [speed, setSpeed] = React.useState<SpeedOption>(1);
   const animRef = React.useRef<number | null>(null);
+  const lastFrameTimeRef = React.useRef<number | null>(null);
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
 
   React.useEffect(() => {
@@ -29,20 +34,42 @@ export default function V4RepelCard({ url, autoPlay = false }: { url: string; au
     return () => { alive = false; };
   }, [url, autoPlay]);
 
-  // Auto-play logic
+  // Auto-play logic with speed control
+  // We advance one frame every (dt / speed) ms, where dt is the simulation timestep.
+  // For 600 frames at dt=0.05 s: 30 s of data → at 1× plays in 30 s, at 4× in 7.5 s.
+  // We use requestAnimationFrame + elapsed time tracking instead of advancing every frame,
+  // so the playback rate is independent of monitor refresh rate.
   React.useEffect(() => {
     if (!playing || !trace) return;
     const N = trace.hist?.t?.length ?? 0;
-    const step = () => {
-      setIdx((prev) => {
-        if (prev >= N - 1) { setPlaying(false); return prev; }
-        return prev + 1;
-      });
+    const dt = (trace.meta as any)?.dt ?? 0.05; // simulation timestep in seconds
+    const msPerFrame = (dt / speed) * 1000;     // real ms to wait between frames
+
+    lastFrameTimeRef.current = null;
+
+    const step = (timestamp: number) => {
+      if (lastFrameTimeRef.current === null) {
+        lastFrameTimeRef.current = timestamp;
+      }
+      const elapsed = timestamp - lastFrameTimeRef.current;
+      if (elapsed >= msPerFrame) {
+        // Advance by however many frames fit in elapsed time
+        const framesToAdvance = Math.max(1, Math.floor(elapsed / msPerFrame));
+        lastFrameTimeRef.current = timestamp;
+        setIdx((prev) => {
+          const next = prev + framesToAdvance;
+          if (next >= N - 1) {
+            setPlaying(false);
+            return N - 1;
+          }
+          return next;
+        });
+      }
       animRef.current = requestAnimationFrame(step);
     };
     animRef.current = requestAnimationFrame(step);
     return () => { if (animRef.current) cancelAnimationFrame(animRef.current); };
-  }, [playing, trace]);
+  }, [playing, trace, speed]);
 
   const headline = React.useMemo(() => {
     if (!trace) return null;
@@ -230,7 +257,22 @@ export default function V4RepelCard({ url, autoPlay = false }: { url: string; au
         <div className="rounded-lg border border-white/10 bg-[#020817] p-3">
           <div className="flex items-center justify-between mb-2">
             <span className="text-[10px] font-mono uppercase tracking-widest opacity-60">Top-Down Replay</span>
-            <div className="flex gap-2">
+            <div className="flex items-center gap-2">
+              {/* Speed selector */}
+              <div className="flex items-center gap-1">
+                {SPEED_OPTIONS.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setSpeed(s)}
+                    className="text-[9px] font-mono px-1.5 py-0.5 rounded transition-colors"
+                    style={{
+                      background: speed === s ? "rgba(34,211,238,0.20)" : "transparent",
+                      border: `1px solid ${speed === s ? "rgba(34,211,238,0.50)" : "rgba(255,255,255,0.10)"}`,
+                      color: speed === s ? "#22d3ee" : "rgba(255,255,255,0.40)",
+                    }}
+                  >{s}×</button>
+                ))}
+              </div>
               <button
                 onClick={() => { setIdx(0); setPlaying(false); }}
                 className="text-[10px] font-mono px-2 py-0.5 rounded border border-white/10 hover:border-cyan-500/40 transition-colors"
