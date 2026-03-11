@@ -105,11 +105,17 @@ export default function Allocator() {
           </div>
         </div>
 
-        {/* Drop-in JSON note */}
-        <div className="mb-6 rounded-lg border border-amber-500/20 bg-amber-500/5 p-3 text-xs font-mono text-amber-300/70">
-          <span className="text-amber-400 font-semibold">DROP-IN DATA:</span> Replace the sample JSON files under{" "}
-          <code className="bg-white/10 px-1 rounded">client/public/aurora/allocator/</code> with your real SITL/HITL run outputs
-          and the cards will update automatically on next load.
+        {/* SITL data loaded confirmation */}
+        <div className="mb-6 rounded-lg border border-cyan-500/20 bg-cyan-500/5 p-3 text-xs font-mono" style={{ color: "oklch(0.75 0.18 200 / 0.8)" }}>
+          <span className="font-semibold" style={{ color: "#22d3ee" }}>SITL DATA LOADED</span>
+          {" — "}
+          All V1–V3 run outputs are live. Files:{" "}
+          <code className="bg-white/10 px-1 rounded">v1_demo.json</code>{" · "}
+          <code className="bg-white/10 px-1 rounded">v2_demo_mz0.json</code>{" · "}
+          <code className="bg-white/10 px-1 rounded">v2_demo_mz2000.json</code>{" · "}
+          <code className="bg-white/10 px-1 rounded">v3_step.json</code>{" · "}
+          <code className="bg-white/10 px-1 rounded">v3_step_snap.json</code>{" · "}
+          <code className="bg-white/10 px-1 rounded">v4_repel_wall.json</code>
         </div>
 
         {/* Active tab content */}
