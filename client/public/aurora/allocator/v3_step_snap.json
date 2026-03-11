@@ -1,12 +1,45 @@
 {
-  "version": "v3-snap",
+  "version": "v3-step-snap",
+  "dir_a_deg": 0.0,
+  "dir_b_deg": 180.0,
+  "fxy_n": 1200.0,
+  "step_time_s": 1.6,
+  "snap_stop_s": 1.3,
+  "total_s": 8.0,
+  "yaw_hold_deg": 0.0,
+  "mz_nm_cmd": 0.0,
+  "brake_gain": 2.2,
+  "speed_stop_thr_mps": 0.2,
+  "actuator_limits": {
+    "alpha_rate_deg_s": 500.0,
+    "ft_rate_n_s": 8000.0
+  },
+  "plenum_model": {
+    "tau_s": 0.05,
+    "min_scale": 0.85,
+    "max_scale": 1.15
+  },
   "step_metrics": {
-    "speed_at_step_mps": 2.11,
-    "speed_at_snap_end_mps": 0.09,
-    "t_to_speed_below_thr_s": 0.62,
-    "snap_stop_distance_m": 0.47,
-    "t_reversal_s": 0.88,
-    "t90_dir_s": 0.41,
-    "yaw_track_coupling_mean_abs_deg": 3.94
+    "speed_at_step_mps": 2.7325773345247013,
+    "speed_at_snap_end_mps": 0.05889419671731527,
+    "t_to_speed_below_thr_s": 0.8799999999999999,
+    "snap_stop_distance_m": 1.267221291501682,
+    "t_reversal_s": 0.94,
+    "t90_dir_s": 1.6400000000000001,
+    "peak_speed_mps": 8.62045859595173,
+    "yaw_track_coupling_mean_abs_deg": 121.80821917808206
+  },
+  "final": {
+    "x_m": -18.330719801389904,
+    "y_m": -4.6416188417596765e-14,
+    "vx_mps": -8.62045859595173,
+    "vy_mps": -8.569785318885503e-15,
+    "alpha_deg_rms": 12.539219403514796,
+    "ft_tan_rms": 0.0,
+    "mz_est_nm": -2.4868995751603507e-14
+  },
+  "timestamps": {
+    "step_t": 1.6,
+    "snap_end_t": 2.9
   }
 }

@@ -1,10 +1,35 @@
 {
   "version": "v3",
+  "dir_a_deg": 0.0,
+  "dir_b_deg": 180.0,
+  "fxy_n": 3000.0,
+  "step_time_s": 3.0,
+  "total_s": 8.0,
+  "yaw_hold_deg": 0.0,
+  "mz_nm_cmd": 0.0,
+  "actuator_limits": {
+    "alpha_rate_deg_s": 200.0,
+    "ft_rate_n_s": 8000.0
+  },
+  "plenum_model": {
+    "tau_s": 0.12,
+    "min_scale": 0.85,
+    "max_scale": 1.15
+  },
   "step_metrics": {
-    "t90_dir_s": 0.38,
-    "t_reversal_s": 0.71,
-    "min_speed_transition_mps": 0.08,
-    "peak_speed_mps": 2.14,
-    "yaw_track_coupling_mean_abs_deg": 3.87
+    "t90_dir_s": 3.3200000000000003,
+    "t_reversal_s": 3.16,
+    "min_speed_transition_mps": 3.4531987977304657,
+    "peak_speed_mps": 9.042543724286691,
+    "yaw_track_coupling_mean_abs_deg": 41.395348837209305
+  },
+  "final": {
+    "x_m": 22.966827952627966,
+    "y_m": 1.2403038275236553e-14,
+    "vx_mps": -5.5597284935753954,
+    "vy_mps": 3.663005258142714e-15,
+    "alpha_deg_rms": 24.206145913796355,
+    "ft_tan_rms": 0.0,
+    "mz_est_nm": -4.263256414560602e-14
   }
 }

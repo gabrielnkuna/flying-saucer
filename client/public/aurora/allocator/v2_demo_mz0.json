@@ -1,12 +1,18 @@
 {
   "allocator_version": "v2",
+  "dir_deg": 90.0,
+  "fxy_n": 3000.0,
   "mz_nm_cmd": 0.0,
-  "yaw_track_coupling_mean_abs_deg": 4.09,
+  "duration_s": 6.0,
+  "yaw_hold_deg": 0.0,
+  "yaw_track_coupling_mean_abs_deg": 90.0,
   "final": {
-    "y_m": 19.89,
-    "vy_mps": 1.43,
-    "alpha_deg_rms": 6.28,
-    "ft_tan_rms": 0.41,
-    "mz_est_nm": 1.2
+    "x_m": 2.5613721242824597e-15,
+    "y_m": 47.4188959212814,
+    "vx_mps": 8.50106912926097e-16,
+    "vy_mps": 15.738100233013633,
+    "alpha_deg_rms": 24.206145913796355,
+    "ft_tan_rms": 0.0,
+    "mz_est_nm": -2.842170943040401e-14
   }
 }
