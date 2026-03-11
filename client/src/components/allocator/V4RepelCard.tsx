@@ -92,9 +92,16 @@ export default function V4RepelCard({ url, autoPlay = false }: { url: string; au
     const N = t.length;
     if (!N) return;
 
-    const ox = Number(meta?.obstacle?.x_m ?? 0);
-    const oy = Number(meta?.obstacle?.y_m ?? 0);
-    const radius = Number(meta?.field?.radius_m ?? 0);
+    // Support both single obstacle (legacy) and multi-obstacle (new schema)
+    type ObsMeta = { label?: string; x_m: number; y_m: number; k?: number; radius?: number };
+    const obstacles: ObsMeta[] = Array.isArray((meta as any)?.obstacles)
+      ? (meta as any).obstacles
+      : [{ label: "OBS", x_m: Number((meta as any)?.obstacle?.x_m ?? 0), y_m: Number((meta as any)?.obstacle?.y_m ?? 0) }];
+    const radius = Number((meta as any)?.field?.radius_m ?? 28);
+    const phases: { label: string; t_start: number; t_end: number; color: string }[] =
+      (meta as any)?.phases ?? [];
+    const faultWindows: Record<string, { t_start: number; t_end: number }> =
+      (meta as any)?.fault?.fault_windows ?? {};
 
     const c = canvasRef.current;
     const ctx = c.getContext("2d");
@@ -108,14 +115,15 @@ export default function V4RepelCard({ url, autoPlay = false }: { url: string; au
 
     const W = rect.width;
     const H = rect.height;
-    const pad = 28;
+    const pad = 32;
 
-    const allX = [...x, ox - radius, ox + radius];
-    const allY = [...y, oy - radius, oy + radius];
-    const minX = Math.min(...allX);
-    const maxX = Math.max(...allX);
-    const minY = Math.min(...allY);
-    const maxY = Math.max(...allY);
+    // Compute world bounds including all obstacles
+    const allX = [...x, ...obstacles.map(o => o.x_m - radius), ...obstacles.map(o => o.x_m + radius)];
+    const allY = [...y, ...obstacles.map(o => o.y_m - radius), ...obstacles.map(o => o.y_m + radius)];
+    const minX = Math.min(...allX) - 2;
+    const maxX = Math.max(...allX) + 2;
+    const minY = Math.min(...allY) - 2;
+    const maxY = Math.max(...allY) + 2;
     const spanX = Math.max(1e-6, maxX - minX);
     const spanY = Math.max(1e-6, maxY - minY);
     const s = Math.min((W - 2 * pad) / spanX, (H - 2 * pad) / spanY);
@@ -126,62 +134,106 @@ export default function V4RepelCard({ url, autoPlay = false }: { url: string; au
     ];
 
     const i = Math.max(0, Math.min(N - 1, idx));
+    const curT = t[i];
 
     // Background
-    ctx.fillStyle = "rgba(2,8,23,0.95)";
+    ctx.fillStyle = "rgba(2,8,23,0.97)";
     ctx.fillRect(0, 0, W, H);
 
     // Grid lines
-    ctx.strokeStyle = "rgba(255,255,255,0.05)";
+    ctx.strokeStyle = "rgba(255,255,255,0.04)";
     ctx.lineWidth = 1;
-    for (let gx = Math.ceil(minX); gx <= Math.floor(maxX); gx++) {
+    const gridStep = spanX > 60 ? 10 : 5;
+    for (let gx = Math.ceil(minX / gridStep) * gridStep; gx <= maxX; gx += gridStep) {
       const [cx] = toCanvas(gx, minY);
       ctx.beginPath(); ctx.moveTo(cx, pad); ctx.lineTo(cx, H - pad); ctx.stroke();
     }
-    for (let gy = Math.ceil(minY); gy <= Math.floor(maxY); gy++) {
+    for (let gy = Math.ceil(minY / gridStep) * gridStep; gy <= maxY; gy += gridStep) {
       const [, cy] = toCanvas(minX, gy);
       ctx.beginPath(); ctx.moveTo(pad, cy); ctx.lineTo(W - pad, cy); ctx.stroke();
     }
 
-    // Repel field outer ring (2× radius)
-    const [ocx, ocy] = toCanvas(ox, oy);
-    ctx.strokeStyle = "rgba(245,158,11,0.15)";
-    ctx.lineWidth = 1;
-    ctx.setLineDash([4, 4]);
-    ctx.beginPath();
-    ctx.arc(ocx, ocy, radius * 2 * s, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.setLineDash([]);
+    // Draw all obstacles with their repulsion rings
+    const obsColors = ["#ef4444", "#f59e0b", "#a78bfa", "#34d399"];
+    obstacles.forEach((obs, oi) => {
+      const [ocx, ocy] = toCanvas(obs.x_m, obs.y_m);
+      const obsRadius = obs.radius ?? radius;
+      const col = obsColors[oi % obsColors.length];
+      // Soft zone ring (2× radius)
+      ctx.strokeStyle = col.replace(")", "").replace("rgb", "rgba") + ",0.08)";
+      const colRgba = (hex: string, a: number) => {
+        const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+        return `rgba(${r},${g},${b},${a})`;
+      };
+      ctx.strokeStyle = colRgba(col, 0.12);
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3, 4]);
+      ctx.beginPath();
+      ctx.arc(ocx, ocy, obsRadius * 1.6 * s, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      // Hard radius ring
+      ctx.strokeStyle = colRgba(col, 0.55);
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(ocx, ocy, obsRadius * s, 0, Math.PI * 2);
+      ctx.stroke();
+      // Fill
+      const grad = ctx.createRadialGradient(ocx, ocy, 0, ocx, ocy, 8);
+      grad.addColorStop(0, colRgba(col, 0.9));
+      grad.addColorStop(1, colRgba(col, 0.3));
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(ocx, ocy, 7, 0, Math.PI * 2);
+      ctx.fill();
+      // Label
+      ctx.fillStyle = colRgba(col, 0.7);
+      ctx.font = "bold 9px monospace";
+      ctx.fillText(obs.label ?? `OBS${oi+1}`, ocx + 10, ocy + 4);
+    });
 
-    // Repel field inner radius ring
-    ctx.strokeStyle = "rgba(245,158,11,0.5)";
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.arc(ocx, ocy, radius * s, 0, Math.PI * 2);
-    ctx.stroke();
-
-    // Obstacle
-    ctx.fillStyle = "rgba(239,68,68,0.8)";
-    ctx.beginPath();
-    ctx.arc(ocx, ocy, 7, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "rgba(239,68,68,0.4)";
-    ctx.font = "10px monospace";
-    ctx.fillText("OBS", ocx + 10, ocy + 4);
-
-    // Full path (faded)
-    ctx.strokeStyle = "rgba(34,211,238,0.15)";
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    for (let k = 0; k < N; k++) {
-      const [cx, cy] = toCanvas(x[k], y[k]);
-      if (k === 0) ctx.moveTo(cx, cy); else ctx.lineTo(cx, cy);
+    // Draw phase-coloured full path segments
+    if (phases.length > 0) {
+      phases.forEach((ph) => {
+        const startIdx = t.findIndex(tt => tt >= ph.t_start);
+        const endIdx = t.findIndex(tt => tt >= ph.t_end);
+        const si = Math.max(0, startIdx);
+        const ei = Math.min(N - 1, endIdx < 0 ? N - 1 : endIdx);
+        const colRgba = (hex: string, a: number) => {
+          const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+          return `rgba(${r},${g},${b},${a})`;
+        };
+        ctx.strokeStyle = colRgba(ph.color, 0.18);
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        for (let k = si; k <= ei; k++) {
+          const [cx, cy] = toCanvas(x[k], y[k]);
+          if (k === si) ctx.moveTo(cx, cy); else ctx.lineTo(cx, cy);
+        }
+        ctx.stroke();
+      });
+    } else {
+      // Fallback: single faded path
+      ctx.strokeStyle = "rgba(34,211,238,0.12)";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      for (let k = 0; k < N; k++) {
+        const [cx, cy] = toCanvas(x[k], y[k]);
+        if (k === 0) ctx.moveTo(cx, cy); else ctx.lineTo(cx, cy);
+      }
+      ctx.stroke();
     }
-    ctx.stroke();
 
-    // Traversed path (bright)
-    ctx.strokeStyle = "rgba(34,211,238,0.85)";
-    ctx.lineWidth = 2;
+    // Traversed path (bright, current phase colour)
+    const curPhase = phases.find(ph => curT >= ph.t_start && curT < ph.t_end);
+    const traversedColor = curPhase ? curPhase.color : "#22d3ee";
+    const colRgbaFn = (hex: string, a: number) => {
+      if (hex.startsWith("rgba") || hex.startsWith("rgb")) return hex;
+      const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+      return `rgba(${r},${g},${b},${a})`;
+    };
+    ctx.strokeStyle = colRgbaFn(traversedColor, 0.9);
+    ctx.lineWidth = 2.5;
     ctx.beginPath();
     for (let k = 0; k <= i; k++) {
       const [cx, cy] = toCanvas(x[k], y[k]);
@@ -189,31 +241,59 @@ export default function V4RepelCard({ url, autoPlay = false }: { url: string; au
     }
     ctx.stroke();
 
+    // Fault window highlight on path
+    Object.values(faultWindows).forEach((fw, fi) => {
+      const fColors = ["rgba(239,68,68,0.6)", "rgba(245,158,11,0.6)"];
+      const fsi = Math.max(0, t.findIndex(tt => tt >= fw.t_start));
+      const fei = Math.min(i, t.findIndex(tt => tt >= fw.t_end) < 0 ? N-1 : t.findIndex(tt => tt >= fw.t_end));
+      if (fsi >= fei) return;
+      ctx.strokeStyle = fColors[fi % fColors.length];
+      ctx.lineWidth = 3.5;
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath();
+      for (let k = fsi; k <= fei; k++) {
+        const [cx, cy] = toCanvas(x[k], y[k]);
+        if (k === fsi) ctx.moveTo(cx, cy); else ctx.lineTo(cx, cy);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+    });
+
     // Craft marker
     const [px, py] = toCanvas(x[i], y[i]);
-    ctx.strokeStyle = "#22d3ee";
-    ctx.fillStyle = "rgba(34,211,238,0.2)";
+    const craftColor = colRgbaFn(traversedColor, 1.0);
+    ctx.strokeStyle = craftColor;
+    ctx.fillStyle = colRgbaFn(traversedColor, 0.2);
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.arc(px, py, 8, 0, Math.PI * 2);
+    ctx.arc(px, py, 9, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
 
     // Velocity arrow
-    const vScale = 20;
+    const vScale = Math.max(4, Math.min(20, 80 / Math.max(1, Math.sqrt(vx[i]**2 + vy[i]**2))));
     const ax = px + vx[i] * vScale;
     const ay = py - vy[i] * vScale;
-    ctx.strokeStyle = "#22d3ee";
+    ctx.strokeStyle = craftColor;
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.moveTo(px, py);
     ctx.lineTo(ax, ay);
     ctx.stroke();
 
-    // Time label
-    ctx.fillStyle = "rgba(34,211,238,0.6)";
-    ctx.font = "11px monospace";
-    ctx.fillText(`t = ${fmt(t[i], 2)} s`, pad, pad - 8);
+    // Phase label
+    const phLabel = curPhase ? curPhase.label : "";
+    ctx.fillStyle = colRgbaFn(traversedColor, 0.75);
+    ctx.font = "bold 10px monospace";
+    ctx.fillText(`t = ${fmt(t[i], 2)} s  ${phLabel}`, pad, pad - 10);
+
+    // Active fault label
+    const activeFault = Object.entries(faultWindows).find(([, fw]) => curT >= fw.t_start && curT < fw.t_end);
+    if (activeFault) {
+      ctx.fillStyle = "rgba(239,68,68,0.85)";
+      ctx.font = "bold 9px monospace";
+      ctx.fillText(`⚡ FAULT: ${activeFault[0].replace(/_/g, " ")}`, pad, pad + 6);
+    }
   }, [trace, idx]);
 
   if (err) return <div className="text-sm text-red-400 font-mono p-4">V4 error: {err}</div>;
@@ -232,10 +312,11 @@ export default function V4RepelCard({ url, autoPlay = false }: { url: string; au
       <div className="rounded-lg border border-cyan-500/20 bg-cyan-500/5 p-4">
         <div className="flex items-center gap-2 mb-1">
           <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-400 uppercase tracking-widest">V4</span>
-          <span className="text-sm font-semibold">Repel Field — Gate-D Style</span>
+          <span className="text-sm font-semibold">Multi-Wall Complex Evasion — 5-Phase SITL</span>
         </div>
         <div className="text-xs opacity-60 font-mono mt-1">
-          Synthetic repulsion field. Craft approaches obstacle; field deflects outward. Scrub or play the trajectory below.
+          18 s run · 4 obstacles · 5 evasion phases: head-on approach → lateral snap past Wall A → S-curve corridor between Wall B &amp; C → snap-stop before Wall D → return glide.
+          Fault injections: stuck flap #7 (t=7–8.4 s) and dead fan group 2 (t=12–13.6 s). Path colour changes per phase; dashed overlay marks fault windows.
         </div>
       </div>
 
