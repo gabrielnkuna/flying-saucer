@@ -1,6 +1,7 @@
 import * as React from "react";
 import AllocatorKpiGrid from "@/components/AllocatorKpiGrid";
 import FlapRing32 from "@/components/allocator/FlapRing32";
+import FanRing16 from "@/components/allocator/FanRing16";
 import { loadJson, fmt } from "@/lib/loadJson";
 import { computeGateDHeadlineFromTrace, type TraceV4 } from "@/lib/gateDFromHist";
 
@@ -193,6 +194,7 @@ export default function V4RepelCard({ url, autoPlay = false }: { url: string; au
   if (!headline) return <div className="text-sm opacity-50 font-mono p-4">Loaded trace — computing headline…</div>;
 
   const N = trace.hist?.t?.length ?? 0;
+  const fanThrust16 = (trace.hist?.fan_thrust_16?.[idx] as number[] | undefined) ?? [];
   const alphaDeg32: number[] = (trace.hist?.alpha_deg_32 as number[][] | undefined)?.[idx] ?? [];
   const ftTan32: number[] | undefined = (trace.hist?.ft_tan_32 as number[][] | undefined)?.[idx];
   const fxCmd = (trace.hist?.fx_cmd as number[] | undefined)?.[idx] ?? 0;
@@ -254,17 +256,24 @@ export default function V4RepelCard({ url, autoPlay = false }: { url: string; au
           </div>
         </div>
 
-        <FlapRing32
-          alphaDeg32={alphaDeg32}
-          ftTan32={ftTan32}
-          fxCmd={fxCmd}
-          fyCmd={fyCmd}
-          size={300}
-          maxAlphaDeg={30}
-          title="Flap Ring (32) — current frame"
-          showLabels={true}
-          showForceArrow={true}
-        />
+        <div className="grid gap-3">
+          <FanRing16
+            fanThrust16={fanThrust16}
+            size={320}
+            title="Fan Ring (16) — current frame"
+          />
+          <FlapRing32
+            alphaDeg32={alphaDeg32}
+            ftTan32={ftTan32}
+            fxCmd={fxCmd}
+            fyCmd={fyCmd}
+            size={320}
+            maxAlphaDeg={30}
+            title="Flap Ring (32) — current frame"
+            showLabels={true}
+            showForceArrow={true}
+          />
+        </div>
       </div>
     </div>
   );
