@@ -84,6 +84,101 @@ export default function Allocator() {
 
       {/* Content */}
       <div className="max-w-5xl mx-auto px-4 py-8">
+        {/* ── Cross-version summary scorecard ── */}
+        <div className="mb-8 rounded-lg border border-white/10 overflow-hidden">
+          <div className="bg-white/5 px-4 py-2.5 flex items-center justify-between border-b border-white/10">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/15 text-cyan-400 border border-cyan-500/20 uppercase tracking-widest">SCORECARD</span>
+              <span className="text-sm font-semibold" style={{ fontFamily: "'Rajdhani', sans-serif", letterSpacing: "0.04em" }}>Cross-Version KPI Summary — V1 → V4</span>
+            </div>
+            <span className="text-[10px] font-mono opacity-40 hidden sm:block">All values from live SITL JSON</span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs font-mono">
+              <thead>
+                <tr className="border-b border-white/10">
+                  {["Version", "Scenario", "α RMS (°)", "Mz residual", "Yaw coupling", "Key metric", "Status"].map((h) => (
+                    <th key={h} className="px-3 py-2 text-left text-[10px] uppercase tracking-widest opacity-40 font-normal whitespace-nowrap">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  {
+                    ver: "V1", color: "#22d3ee",
+                    scenario: "Omni Slide — cosine dist.",
+                    alpha: "24.2°",
+                    mz: "~0 N·m",
+                    yaw: "90.0°",
+                    key: "Baseline — no yaw trim",
+                    status: "PASS", statusColor: "#22d3ee",
+                  },
+                  {
+                    ver: "V2 (Mz=0)", color: "#22d3ee",
+                    scenario: "Yaw trim — zero Mz cmd",
+                    alpha: "24.2°",
+                    mz: "~0 N·m",
+                    yaw: "90.0°",
+                    key: "Decoupling baseline",
+                    status: "PASS", statusColor: "#22d3ee",
+                  },
+                  {
+                    ver: "V2 (Mz=2000)", color: "#22d3ee",
+                    scenario: "Yaw trim — 2000 N·m cmd",
+                    alpha: "24.2°",
+                    mz: "2000 N·m",
+                    yaw: "90.0°",
+                    key: "Ft·tan RMS = 25 N·m",
+                    status: "PASS", statusColor: "#22d3ee",
+                  },
+                  {
+                    ver: "V3 Step", color: "#22d3ee",
+                    scenario: "Step reversal — 180° dir flip",
+                    alpha: "24.2°",
+                    mz: "~0 N·m",
+                    yaw: "41.4°",
+                    key: "t90 = 3.32 s · t_rev = 3.16 s",
+                    status: "PASS", statusColor: "#22d3ee",
+                  },
+                  {
+                    ver: "V3 Snap", color: "#f59e0b",
+                    scenario: "Step + snap-stop",
+                    alpha: "12.5°",
+                    mz: "~0 N·m",
+                    yaw: "121.8°",
+                    key: "Stop in 0.88 s · dist 1.27 m",
+                    status: "PASS", statusColor: "#f59e0b",
+                  },
+                  {
+                    ver: "V4", color: "#a78bfa",
+                    scenario: "Multi-wall evasion · 5 phases",
+                    alpha: "1.9°",
+                    mz: "5.0 N·m",
+                    yaw: "3.2°",
+                    key: "4 obstacles · min clearance 9.7 m",
+                    status: "PASS", statusColor: "#a78bfa",
+                  },
+                ].map((row, ri) => (
+                  <tr key={ri} className="border-b border-white/5 hover:bg-white/3 transition-colors">
+                    <td className="px-3 py-2.5 font-semibold whitespace-nowrap" style={{ color: row.color }}>{row.ver}</td>
+                    <td className="px-3 py-2.5 opacity-70 whitespace-nowrap">{row.scenario}</td>
+                    <td className="px-3 py-2.5 text-right whitespace-nowrap" style={{ color: Number(row.alpha) > 20 ? "#f59e0b" : "#22d3ee" }}>{row.alpha}</td>
+                    <td className="px-3 py-2.5 text-right whitespace-nowrap opacity-70">{row.mz}</td>
+                    <td className="px-3 py-2.5 text-right whitespace-nowrap" style={{ color: parseFloat(row.yaw) > 90 ? "#ef4444" : parseFloat(row.yaw) > 10 ? "#f59e0b" : "#22d3ee" }}>{row.yaw}</td>
+                    <td className="px-3 py-2.5 opacity-60 whitespace-nowrap">{row.key}</td>
+                    <td className="px-3 py-2.5">
+                      <span className="px-2 py-0.5 rounded text-[9px] uppercase tracking-widest font-semibold" style={{ background: row.statusColor + "22", color: row.statusColor, border: `1px solid ${row.statusColor}55` }}>{row.status}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="px-4 py-2 bg-white/3 text-[9px] font-mono opacity-40 border-t border-white/5">
+            α RMS = mean flap deflection angle RMS across all segments · Mz residual = mean absolute yaw torque · Yaw coupling = mean |yaw − velocity direction| · Click any tab above to view the full run
+          </div>
+        </div>
+
         {/* Version progression banner */}
         <div className="mb-6 rounded-lg border border-white/10 bg-white/5 p-4">
           <div className="text-[10px] font-mono uppercase tracking-widest opacity-50 mb-2">Allocator Progression</div>
