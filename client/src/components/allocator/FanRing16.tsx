@@ -10,6 +10,23 @@ function clamp(v: number, lo: number, hi: number) {
   return Math.max(lo, Math.min(hi, v));
 }
 
+// calculate uniformity statistics for a 16‑element fan array
+function fanStatsPct(f: number[]) {
+  const n = f.length;
+  if (!n) return { stdPct: NaN, maxDevPct: NaN, mean: NaN };
+  const mean = f.reduce((a, b) => a + b, 0) / n;
+  if (!isFinite(mean) || Math.abs(mean) < 1e-9) return { stdPct: NaN, maxDevPct: NaN, mean };
+  const varr = f.reduce((acc, v) => acc + (v - mean) * (v - mean), 0) / n;
+  const std = Math.sqrt(varr);
+  let maxDev = 0;
+  for (const v of f) maxDev = Math.max(maxDev, Math.abs(v - mean));
+  return {
+    stdPct: (std / mean) * 100,
+    maxDevPct: (maxDev / mean) * 100,
+    mean,
+  };
+}
+
 export default function FanRing16({
   fanThrust16,
   size = 320,
@@ -107,12 +124,28 @@ export default function FanRing16({
     ctx.fillText("thickness ~ thrust/median", cx, cy + 22);
   }, [fanThrust16, size]);
 
+  const stats = fanStatsPct((fanThrust16 || []).slice(0, 16));
+
   return (
     <div className="rounded-xl border border-white/10 bg-white/5 p-3">
       <div className="text-xs opacity-70 mb-2">{title}</div>
       <canvas ref={canvasRef} style={{ width: size, height: size }} />
       <div className="text-xs opacity-60 mt-2 font-mono">
         normalized vs median (flat ring = constant fans)
+      </div>
+      <div className="mt-2 grid grid-cols-2 gap-2">
+        <div className="rounded-lg border border-white/10 bg-white/5 p-2">
+          <div className="text-[10px] uppercase tracking-wide opacity-70">Uniformity (std)</div>
+          <div className="text-sm font-mono">
+            {Number.isFinite(stats.stdPct) ? `${stats.stdPct.toFixed(2)}%` : "--"}
+          </div>
+        </div>
+        <div className="rounded-lg border border-white/10 bg-white/5 p-2">
+          <div className="text-[10px] uppercase tracking-wide opacity-70">Max deviation</div>
+          <div className="text-sm font-mono">
+            {Number.isFinite(stats.maxDevPct) ? `${stats.maxDevPct.toFixed(2)}%` : "--"}
+          </div>
+        </div>
       </div>
     </div>
   );
